@@ -12,8 +12,25 @@ const amiri = Amiri({
 });
 
 export const metadata: Metadata = {
-  title: "QuranVerseTagger - Personal Quranic Study Tool",
-  description: "Tag, organize, and reflect on Quranic verses with community insights",
+  title: {
+    default: 'Quran Study - Tag, Organize, and Study the Quran',
+    template: '%s | Quran Study',
+  },
+  description: 'Tag verses, create collections, and study the Quran with community insights. Features verse-by-verse audio, translations, and collaborative tagging.',
+  keywords: ['Quran', 'Islam', 'Study', 'Tags', 'Verses', 'Translation', 'Audio', 'Collections'],
+  ...(process.env.NEXT_PUBLIC_APP_URL && {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL),
+  }),
+  openGraph: {
+    type: 'website',
+    siteName: 'Quran Study',
+    title: 'Quran Study - Tag, Organize, and Study the Quran',
+    description: 'Tag verses, create collections, and study the Quran with community insights.',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

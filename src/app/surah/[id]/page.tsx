@@ -10,11 +10,36 @@ import { collections } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import type { Chapter, Verse } from '@/types/verse';
 import type { Collection } from '@/types/collection';
+import type { Metadata } from 'next';
 
 export const dynamic = 'force-dynamic';
 
 interface SurahPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: SurahPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const chapterId = Number.parseInt(id);
+  
+  try {
+    const chapterData = await getChapter(chapterId);
+    const chapter = chapterData.chapter;
+    
+    return {
+      title: `${chapter.name_simple} (${chapter.name_arabic}) - Chapter ${chapter.id}`,
+      description: `Read and study Surah ${chapter.name_simple} with translations, audio recitation, and verse-by-verse insights. ${chapter.verses_count} verses, ${chapter.revelation_place} revelation.`,
+      openGraph: {
+        title: `${chapter.name_simple} - Quran Study`,
+        description: `Study Surah ${chapter.name_simple} with translations and audio`,
+        type: 'article',
+      },
+    };
+  } catch {
+    return {
+      title: 'Chapter Not Found',
+    };
+  }
 }
 
 export default async function SurahPage({ params }: SurahPageProps) {
