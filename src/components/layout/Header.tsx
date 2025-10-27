@@ -24,6 +24,9 @@ export async function Header() {
                 <Link href="/collections" className="text-gray-700 hover:text-blue-600">
                   Collections
                 </Link>
+                <Link href="/community-tags" className="text-gray-700 hover:text-blue-600">
+                  Community Tags
+                </Link>
                 <span className="text-sm text-gray-600">
                   {session.user.name || session.user.email}
                 </span>
@@ -31,6 +34,9 @@ export async function Header() {
               </>
             ) : (
               <>
+                <Link href="/community-tags" className="text-gray-700 hover:text-blue-600">
+                  Community Tags
+                </Link>
                 <Link 
                   href="/auth/signin" 
                   className="text-gray-700 hover:text-blue-600"

@@ -4,6 +4,8 @@ import { db } from '@/db';
 import { tags } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import Link from 'next/link';
+import TagToggleButton from '@/components/tags/TagToggleButton';
+import DeleteTagButton from '@/components/tags/DeleteTagButton';
 
 export default async function MyTagsPage() {
   const session = await auth();
@@ -38,22 +40,28 @@ export default async function MyTagsPage() {
       )}
 
       {Object.entries(groupedTags).map(([tagText, tagList]) => (
-        <div key={tagText} className="mb-6">
-          <h2 className="text-xl font-semibold mb-2 text-gray-900">
-            #{tagText} ({tagList.length})
+        <div key={tagText} className="mb-6 border rounded-lg p-4 bg-white shadow-sm">
+          <h2 className="text-xl font-semibold mb-3 text-gray-900">
+            #{tagText} <span className="text-sm text-gray-500">({tagList.length} verse{tagList.length > 1 ? 's' : ''})</span>
           </h2>
           <div className="space-y-2">
             {tagList.map((tag) => (
-              <Link
+              <div
                 key={tag.id}
-                href={`/surah/${tag.verseKey.split(':')[0]}`}
-                className="block p-3 bg-gray-50 rounded hover:bg-gray-100 text-gray-900"
+                className="flex items-center justify-between p-3 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
               >
-                Verse {tag.verseKey}
-                {tag.isPublic && (
-                  <span className="ml-2 text-xs text-blue-600 font-medium">Public</span>
-                )}
-              </Link>
+                <Link
+                  href={`/surah/${tag.verseKey.split(':')[0]}`}
+                  className="text-blue-600 hover:underline font-medium"
+                >
+                  Verse {tag.verseKey}
+                </Link>
+                
+                <div className="flex items-center gap-2">
+                  <TagToggleButton tagId={tag.id} isPublic={tag.isPublic} />
+                  <DeleteTagButton tagId={tag.id} />
+                </div>
+              </div>
             ))}
           </div>
         </div>

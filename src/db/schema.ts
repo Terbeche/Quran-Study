@@ -67,7 +67,10 @@ export const tagVotes = pgTable('tag_votes', {
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   voteType: integer('vote_type').notNull(), // 1 for upvote, -1 for downvote
   createdAt: timestamp('created_at').defaultNow().notNull(),
-});
+}, (table) => ({
+  // One vote per user per tag
+  uniqueUserTagVote: unique().on(table.userId, table.tagId),
+}));
 
 // Collections table
 export const collections = pgTable('collections', {

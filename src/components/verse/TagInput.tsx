@@ -1,7 +1,7 @@
 'use client';
 
 import { useOptimistic, useState, useTransition, useRef } from 'react';
-import { createTagAction, deleteTagAction } from '@/actions/tag-actions';
+import { createTagAction, deleteTagAction, toggleTagVisibilityAction } from '@/actions/tag-actions';
 import { normalizeTag, isValidTag } from '@/lib/utils/tag-normalizer';
 import type { Tag } from '@/types/tag';
 
@@ -68,6 +68,12 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
     });
   };
 
+  const handleToggleVisibility = (tagId: string, currentIsPublic: boolean) => {
+    startTransition(async () => {
+      await toggleTagVisibilityAction(tagId, !currentIsPublic);
+    });
+  };
+
   if (!userId) {
     return (
       <div className="mt-4 text-sm text-gray-500">
@@ -78,22 +84,24 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
 
   return (
     <div className="mt-4">
-      <form onSubmit={handleSubmit} className="flex gap-2">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Add a tag..."
-          className="flex-1 px-3 py-2 border rounded-md text-gray-900"
-          maxLength={50}
-        />
-        <button
-          type="submit"
-          disabled={isPending || !isValidTag(input)}
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-        >
-          Add
-        </button>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div className="flex gap-2">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Add a tag..."
+            className="flex-1 px-3 py-2 border rounded-md text-gray-900"
+            maxLength={50}
+          />
+          <button
+            type="submit"
+            disabled={isPending || !isValidTag(input)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+          >
+            Add
+          </button>
+        </div>
       </form>
 
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
@@ -103,9 +111,26 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
           {optimisticTags.map((tag) => (
             <div
               key={tag.id}
-              className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium"
+              className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
+                tag.isPublic
+                  ? 'bg-purple-100 text-purple-800'
+                  : 'bg-blue-100 text-blue-800'
+              }`}
             >
               <span>#{tag.tagText}</span>
+              
+              {/* Toggle visibility button */}
+              <button
+                onClick={() => handleToggleVisibility(tag.id, tag.isPublic)}
+                className="hover:opacity-70 text-xs"
+                disabled={isPending}
+                title={tag.isPublic ? 'Make private' : 'Make public'}
+                aria-label={tag.isPublic ? 'Make tag private' : 'Make tag public'}
+              >
+                {tag.isPublic ? '🌐' : '🔒'}
+              </button>
+
+              {/* Delete button */}
               <button
                 onClick={() => handleDelete(tag.id)}
                 className="hover:text-red-600 font-bold"

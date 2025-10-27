@@ -6,6 +6,7 @@ import { tags } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import TagInput from './TagInput';
 import VerseAudioPlayer from './VerseAudioPlayer';
+import CommunityTagsPreview from './CommunityTagsPreview';
 
 interface VerseCardProps {
   readonly verse: Verse;
@@ -61,6 +62,9 @@ export async function VerseCard({ verse, audioUrl, showTags = true }: VerseCardP
           userId={userId}
         />
       )}
+
+      {/* Community tags preview */}
+      <CommunityTagsPreview verseKey={verse.verse_key} />
     </div>
   );
 }

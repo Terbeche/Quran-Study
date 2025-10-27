@@ -1,0 +1,1 @@
+ALTER TABLE "tag_votes" ADD CONSTRAINT "tag_votes_user_id_tag_id_unique" UNIQUE("user_id","tag_id");
