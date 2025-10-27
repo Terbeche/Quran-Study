@@ -94,7 +94,7 @@ export default async function SurahPage({ params }: SurahPageProps) {
 
   if (error || !chapter) {
     return (
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 animate-fade-in">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
           <p className="text-red-600">Failed to load chapter. Please try again.</p>
         </div>
@@ -103,25 +103,25 @@ export default async function SurahPage({ params }: SurahPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 animate-fade-in">
       {/* Chapter Header */}
       <div className="mb-8">
-        <Link href="/" className="text-blue-600 hover:underline mb-4 inline-block">
+        <Link href="/" className="link mb-4 inline-block">
           ← Back to Home
         </Link>
         
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="card">
           <div className="flex justify-between items-start mb-4">
             <div>
-              <h1 className="text-3xl font-bold mb-2 text-gray-900">
+              <h1 className="text-3xl font-bold mb-2 text-accent">
                 {chapter.name_simple}
               </h1>
-              <p className="text-gray-700">{chapter.translated_name?.name}</p>
+              <p style={{ color: 'var(--foreground)' }}>{chapter.translated_name?.name}</p>
             </div>
-            <div className="text-4xl font-arabic text-gray-900">{chapter.name_arabic}</div>
+            <div className="text-4xl font-arabic text-accent">{chapter.name_arabic}</div>
           </div>
           
-          <div className="flex gap-6 text-sm text-gray-700">
+          <div className="flex gap-6 text-sm" style={{ color: 'var(--foreground)' }}>
             <span>📖 {chapter.verses_count} verses</span>
             <span className="capitalize">📍 Revelation: {chapter.revelation_place}</span>
             <span>🔢 Chapter {chapter.id}</span>
@@ -152,8 +152,8 @@ export default async function SurahPage({ params }: SurahPageProps) {
       </div>
 
       {verses.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">No verses found</p>
+        <div className="text-center py-12 card">
+          <p style={{ color: 'rgba(0,0,0,0.5)' }}>No verses found</p>
         </div>
       )}
     </div>

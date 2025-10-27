@@ -8,8 +8,8 @@ interface VerseListProps {
 export function VerseList({ verses }: VerseListProps) {
   if (!verses || verses.length === 0) {
     return (
-      <div className="text-center py-12 bg-gray-50 rounded-lg">
-        <p className="text-gray-500">No verses found</p>
+      <div className="text-center py-12 card">
+        <p style={{ color: 'rgba(0,0,0,0.5)' }}>No verses found</p>
       </div>
     );
   }

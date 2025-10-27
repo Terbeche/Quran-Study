@@ -41,20 +41,20 @@ export default async function CommunityTagsPage() {
   }, {} as Record<string, typeof publicTags>);
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="max-w-4xl mx-auto py-8 px-4 animate-fade-in">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Community Tags</h1>
-        <p className="text-gray-600 mt-2">
+        <h1 className="section-title mb-2">Community Tags</h1>
+        <p style={{ color: 'var(--foreground)' }}>
           Discover how others tag and organize Quranic verses
         </p>
       </div>
 
       {publicTags.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500">No public tags yet. Be the first to share!</p>
+        <div className="text-center py-12 card">
+          <p style={{ color: 'rgba(0,0,0,0.5)' }}>No public tags yet. Be the first to share!</p>
           <Link
             href="/tags"
-            className="mt-4 inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            className="mt-4 inline-block btn-primary"
           >
             Go to My Tags
           </Link>
@@ -66,10 +66,10 @@ export default async function CommunityTagsPage() {
           const totalVotes = tagList.reduce((sum, tag) => sum + tag.votes, 0);
 
           return (
-            <div key={tagText} className="border rounded-lg p-4 bg-white shadow-sm">
+            <div key={tagText} className="card">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-semibold text-gray-900">#{tagText}</h2>
-                <div className="text-sm text-gray-500">
+                <h2 className="text-2xl font-semibold text-accent">#{tagText}</h2>
+                <div className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
                   <span className="font-medium">{tagList.length}</span> verse
                   {tagList.length > 1 ? 's' : ''} · <span className="font-medium">{totalVotes}</span> total votes
                 </div>
@@ -79,11 +79,12 @@ export default async function CommunityTagsPage() {
                 {tagList.map((tag) => (
                   <div
                     key={tag.id}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
+                    className="flex items-center justify-between p-3 rounded transition-colors"
+                    style={{ background: 'rgba(16, 185, 129, 0.05)' }}
                   >
                     <Link
                       href={`/surah/${tag.verseKey.split(':')[0]}`}
-                      className="text-blue-600 hover:underline font-medium"
+                      className="link font-medium"
                     >
                       Verse {tag.verseKey}
                     </Link>
@@ -95,11 +96,11 @@ export default async function CommunityTagsPage() {
                         userVote={userVotes[tag.id] || null}
                       />
                     ) : (
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
                         <span className="text-sm">↑ {tag.votes}</span>
                         <Link
                           href="/auth/signin"
-                          className="text-sm text-blue-600 hover:underline"
+                          className="text-sm link"
                         >
                           Sign in to vote
                         </Link>

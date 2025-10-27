@@ -51,15 +51,15 @@ export default function AddToCollectionButton({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-sm text-blue-600 hover:underline"
+        className="text-sm link"
       >
         + Add to Collection
       </button>
 
       {isOpen && (
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-96 overflow-y-auto">
-            <h2 className="text-xl font-bold mb-4 text-gray-900">Add to Collection</h2>
+          <div className="card glass max-w-md w-full max-h-96 overflow-y-auto">
+            <h2 className="text-xl font-bold mb-4 text-accent">Add to Collection</h2>
 
             {error && (
               <div className="mb-4 p-3 bg-red-50 text-red-600 rounded text-sm">
@@ -78,14 +78,15 @@ export default function AddToCollectionButton({
                     className={`w-full text-left p-3 border rounded transition ${
                       isAdded 
                         ? 'bg-green-50 border-green-300 cursor-not-allowed' 
-                        : 'hover:bg-gray-50 disabled:opacity-50'
+                        : 'hover:bg-emerald-50 disabled:opacity-50'
                     }`}
+                    style={isAdded ? {} : { borderColor: 'rgba(16, 185, 129, 0.2)' }}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
-                        <div className="font-medium text-gray-900">{collection.name}</div>
+                        <div className="font-medium text-accent">{collection.name}</div>
                         {collection.description && (
-                          <div className="text-sm text-gray-500">{collection.description}</div>
+                          <div className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>{collection.description}</div>
                         )}
                       </div>
                       {isAdded && (
@@ -102,7 +103,8 @@ export default function AddToCollectionButton({
                 setIsOpen(false);
                 setError('');
               }}
-              className="mt-4 w-full px-4 py-2 border rounded hover:bg-gray-50 text-gray-900"
+              className="mt-4 w-full px-4 py-2 border rounded transition-colors text-accent"
+              style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}
             >
               Cancel
             </button>

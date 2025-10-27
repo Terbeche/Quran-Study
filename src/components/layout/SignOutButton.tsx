@@ -6,7 +6,10 @@ export function SignOutButton() {
   return (
     <button
       onClick={() => signOut()}
-      className="text-sm text-red-600 hover:text-red-700"
+      className="text-sm transition-colors"
+      style={{ color: '#dc2626' }}
+      onMouseEnter={(e) => e.currentTarget.style.color = '#b91c1c'}
+      onMouseLeave={(e) => e.currentTarget.style.color = '#dc2626'}
     >
       Sign Out
     </button>

@@ -24,8 +24,9 @@ export default function TagToggleButton({ tagId, isPublic }: TagToggleButtonProp
       className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
         isPublic
           ? 'bg-purple-100 text-purple-800 hover:bg-purple-200'
-          : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+          : 'hover:bg-gray-300'
       } disabled:opacity-50`}
+      style={isPublic ? {} : { background: 'rgba(0,0,0,0.1)', color: 'var(--foreground)' }}
       title={isPublic ? 'Make private' : 'Make public'}
     >
       {isPublic ? '🌐 Public' : '🔒 Private'}

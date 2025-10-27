@@ -45,7 +45,7 @@ export function SignInForm() {
       )}
 
       <div>
-        <label htmlFor="email" className="block text-sm font-medium text-gray-900 mb-1">
+        <label htmlFor="email" className="block text-sm font-medium mb-1 text-accent">
           Email
         </label>
         <input
@@ -54,13 +54,13 @@ export function SignInForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+          className="input"
           placeholder="you@example.com"
         />
       </div>
 
       <div>
-        <label htmlFor="password" className="block text-sm font-medium text-gray-900 mb-1">
+        <label htmlFor="password" className="block text-sm font-medium mb-1 text-accent">
           Password
         </label>
         <input
@@ -69,7 +69,7 @@ export function SignInForm() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900"
+          className="input"
           placeholder="••••••••"
         />
       </div>
@@ -77,7 +77,7 @@ export function SignInForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {loading ? 'Signing in...' : 'Sign In'}
       </button>

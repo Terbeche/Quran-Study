@@ -27,29 +27,29 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   if (!query) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6 text-gray-900">Search Quran</h1>
+      <div className="container mx-auto px-4 py-8 animate-fade-in">
+        <h1 className="section-title">Search Quran</h1>
         <SearchBar />
-        <p className="text-gray-700 mt-4 mb-8">Enter a search term to begin, or browse all chapters below</p>
+        <p className="mt-4 mb-8" style={{ color: 'var(--foreground)' }}>Enter a search term to begin, or browse all chapters below</p>
         
         {/* All Chapters */}
         <div className="mt-8">
-          <h2 className="text-2xl font-bold mb-6 text-gray-900">📚 All Chapters (Surahs)</h2>
+          <h2 className="section-title">📚 All Chapters (Surahs)</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {chapters.map((chapter) => (
               <Link
                 key={chapter.id}
                 href={`/surah/${chapter.id}`}
-                className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow"
+                className="card card-hover"
               >
                 <div className="flex justify-between items-start mb-2">
                   <div>
-                    <div className="font-semibold mb-1 text-gray-900">{chapter.name_simple}</div>
-                    <div className="text-sm text-gray-700">{chapter.translated_name?.name}</div>
+                    <div className="font-semibold mb-1 text-accent">{chapter.name_simple}</div>
+                    <div className="text-sm" style={{ color: 'var(--foreground)' }}>{chapter.translated_name?.name}</div>
                   </div>
-                  <div className="text-2xl font-arabic text-gray-900">{chapter.name_arabic}</div>
+                  <div className="text-2xl font-arabic text-accent">{chapter.name_arabic}</div>
                 </div>
-                <div className="text-xs text-gray-500 flex gap-4">
+                <div className="text-xs flex gap-4" style={{ color: 'rgba(0,0,0,0.5)' }}>
                   <span>{chapter.verses_count} verses</span>
                   <span className="capitalize">{chapter.revelation_place}</span>
                 </div>
@@ -72,8 +72,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6 text-gray-900">Search Quran</h1>
+      <div className="container mx-auto px-4 py-8 animate-fade-in">
+        <h1 className="section-title">Search Quran</h1>
         <SearchBar initialQuery={query} />
         <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-4">
           <p className="text-red-600">
@@ -88,8 +88,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-gray-900">Search Results</h1>
+    <div className="container mx-auto px-4 py-8 animate-fade-in">
+      <h1 className="section-title">Search Results</h1>
       <SearchBar initialQuery={query} />
       <VerseList verses={data?.results || []} />
     </div>

@@ -197,55 +197,103 @@ export function ChapterAudioPlayer({
   }, [loopMode, currentVerse, totalVerses, handleNext]);
 
   return (
-    <div className="sticky top-4 bg-white border-2 border-blue-200 rounded-lg p-6 shadow-lg mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="font-bold text-lg mb-1 text-gray-900">Chapter Audio Player</h3>
-          <p className="text-sm text-gray-700">Verse {currentVerse} of {totalVerses}</p>
+    <div className="sticky top-20 glass rounded-2xl p-6 shadow-2xl mb-8 animate-fade-in border border-emerald-100">
+      {/* Header with Verse Info */}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <div className="w-14 h-14 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl flex items-center justify-center">
+            <span className="text-white text-2xl">🎵</span>
+          </div>
+          <div>
+            <h3 className="font-bold text-xl text-gray-900">Chapter Audio</h3>
+            <p className="text-sm text-emerald-600 font-medium">
+              Verse {currentVerse} of {totalVerses}
+            </p>
+          </div>
         </div>
         
-        <div className="flex gap-2">
-          <button
-            onClick={handlePrevious}
-            disabled={currentVerse === 1}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
-            aria-label="Previous verse"
+        {/* Audio Wave Visualization (when playing) */}
+        {isPlaying && (
+          <div className="flex items-center gap-1 h-10">
+            <div className="w-1 bg-emerald-500 rounded-full audio-wave h-full" style={{ animationDelay: '0s' }} />
+            <div className="w-1 bg-emerald-500 rounded-full audio-wave h-full" style={{ animationDelay: '0.1s' }} />
+            <div className="w-1 bg-emerald-500 rounded-full audio-wave h-full" style={{ animationDelay: '0.2s' }} />
+            <div className="w-1 bg-emerald-500 rounded-full audio-wave h-full" style={{ animationDelay: '0.3s' }} />
+            <div className="w-1 bg-emerald-500 rounded-full audio-wave h-full" style={{ animationDelay: '0.4s' }} />
+          </div>
+        )}
+      </div>
+
+      {/* Main Controls */}
+      <div className="flex items-center justify-center gap-4 mb-6">
+        <button
+          onClick={handlePrevious}
+          disabled={currentVerse === 1}
+          className="w-12 h-12 rounded-full bg-emerald-50 hover:bg-emerald-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center text-emerald-600 hover:scale-110 disabled:hover:scale-100"
+          aria-label="Previous verse"
+        >
+          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z" />
+          </svg>
+        </button>
+        
+        <button
+          onClick={handlePlayPause}
+          className={`w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-110 ${
+            isPlaying ? 'animate-pulse-glow' : ''
+          }`}
+          aria-label={isPlaying ? 'Pause' : 'Play'}
+        >
+          {isPlaying ? (
+            <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          ) : (
+            <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+            </svg>
+          )}
+        </button>
+        
+        <button
+          onClick={handleNext}
+          disabled={currentVerse === totalVerses}
+          className="w-12 h-12 rounded-full bg-emerald-50 hover:bg-emerald-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center text-emerald-600 hover:scale-110 disabled:hover:scale-100"
+          aria-label="Next verse"
+        >
+          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z" />
+          </svg>
+        </button>
+      </div>
+
+      {/* Progress Bar */}
+      <div className="mb-6">
+        <div className="w-full h-2 bg-emerald-100 rounded-full overflow-hidden">
+          <div
+            className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 rounded-full transition-all duration-300 relative"
+            style={{ width: `${(currentVerse / totalVerses) * 100}%` }}
           >
-            ⏮️ Prev
-          </button>
-          
-          <button
-            onClick={handlePlayPause}
-            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-            aria-label={isPlaying ? 'Pause' : 'Play'}
-          >
-            {isPlaying ? '⏸️ Pause' : '▶️ Play Chapter'}
-          </button>
-          
-          <button
-            onClick={handleNext}
-            disabled={currentVerse === totalVerses}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed rounded-md transition-colors"
-            aria-label="Next verse"
-          >
-            Next ⏭️
-          </button>
+            <div className="absolute right-0 top-0 bottom-0 w-2 bg-white/40 rounded-full animate-pulse" />
+          </div>
+        </div>
+        <div className="flex justify-between mt-2 text-xs text-gray-500">
+          <span>Verse {currentVerse}</span>
+          <span>{totalVerses} verses total</span>
         </div>
       </div>
 
-            {/* Speed and Loop Controls */}
-      <div className="flex items-center gap-4 mb-4 pb-4 border-b border-gray-200 flex-wrap">
+      {/* Controls Row */}
+      <div className="flex items-center gap-4 flex-wrap border-t border-emerald-100 pt-4">
         {/* Reciter Selector */}
         {reciters.length > 0 && onReciterChange && (
-          <div className="flex items-center gap-2">
-            <label htmlFor="reciter-select" className="text-sm font-medium text-gray-700">
-              Reciter:
-            </label>
+          <div className="flex items-center gap-2 bg-emerald-50 rounded-lg px-3 py-2">
+            <span className="text-emerald-700 text-xl">👤</span>
             <select
               id="reciter-select"
               value={currentReciterId || 7}
               onChange={(e) => onReciterChange(Number(e.target.value))}
-              className="px-2 py-1 border rounded text-sm text-gray-900 bg-white"
+              className="bg-transparent text-sm text-gray-700 font-medium border-none focus:outline-none cursor-pointer"
             >
               {reciters.map((reciter) => (
                 <option key={reciter.id} value={reciter.id}>
@@ -256,27 +304,33 @@ export function ChapterAudioPlayer({
           </div>
         )}
 
-        <div className="flex items-center gap-2">
-          <label htmlFor="loop-mode" className="text-sm font-medium text-gray-700">
-            Loop:
-          </label>
+        {/* Loop Mode Selector */}
+        <div className="flex items-center gap-2 bg-emerald-50 rounded-lg px-3 py-2">
+          <span className="text-emerald-700 text-xl">🔁</span>
           <select
             id="loop-mode"
             value={loopMode}
             onChange={(e) => setLoopMode(e.target.value as 'off' | 'verse' | 'chapter')}
-            className="px-2 py-1 border rounded text-sm text-gray-900 bg-white"
+            className="bg-transparent text-sm text-gray-700 font-medium border-none focus:outline-none cursor-pointer"
           >
-            <option value="off">Off</option>
-            <option value="verse">Current Verse</option>
-            <option value="chapter">Entire Chapter</option>
+            <option value="off">No Loop</option>
+            <option value="verse">Loop Verse</option>
+            <option value="chapter">Loop Chapter</option>
           </select>
         </div>
 
-        <div className="text-xs text-gray-500 ml-auto">
-          ⌨️ Space: Play/Pause | ←→: Prev/Next | 1-9: Jump forward N verses
+        {/* Keyboard Shortcuts Info */}
+        <div className="ml-auto hidden md:flex items-center gap-2 text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
+          <span className="font-semibold text-emerald-600">⌨️</span>
+          <div className="flex gap-3">
+            <span className="font-mono">Space</span>
+            <span className="font-mono">←→</span>
+            <span className="font-mono">1-9</span>
+          </div>
         </div>
       </div>
 
+      {/* Hidden Audio Element */}
       <audio
         ref={audioRef}
         src={audioUrl}
@@ -287,16 +341,6 @@ export function ChapterAudioPlayer({
       >
         <track kind="captions" />
       </audio>
-      
-      {/* Progress bar */}
-      <div className="mt-4">
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-            style={{ width: `${(currentVerse / totalVerses) * 100}%` }}
-          />
-        </div>
-      </div>
     </div>
   );
 }

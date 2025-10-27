@@ -33,14 +33,14 @@ export default async function CollectionsPage() {
     .orderBy(collections.createdAt);
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="max-w-4xl mx-auto py-8 px-4 animate-fade-in">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">My Collections</h1>
+        <h1 className="section-title mb-0">My Collections</h1>
         <CreateCollectionButton />
       </div>
 
       {userCollections.length === 0 && (
-        <p className="text-gray-500">
+        <p style={{ color: 'rgba(0,0,0,0.5)' }}>
           No collections yet. Create one to organize your favorite verses!
         </p>
       )}
@@ -49,14 +49,14 @@ export default async function CollectionsPage() {
         {userCollections.map((collection) => (
           <div
             key={collection.id}
-            className="p-6 bg-white border rounded-lg hover:shadow-md transition"
+            className="card card-hover"
           >
             <div className="flex items-start justify-between mb-2">
               <Link
                 href={`/collections/${collection.id}`}
                 className="flex-1"
               >
-                <h2 className="text-xl font-semibold text-gray-900 hover:text-blue-600">
+                <h2 className="text-xl font-semibold text-accent hover:opacity-80 transition-opacity">
                   {collection.name}
                 </h2>
               </Link>
@@ -71,13 +71,13 @@ export default async function CollectionsPage() {
             </div>
             
             {collection.description && (
-              <p className="text-gray-600 mb-3">{collection.description}</p>
+              <p className="mb-3" style={{ color: 'var(--foreground)' }}>{collection.description}</p>
             )}
             
-            <div className="flex items-center gap-4 text-sm text-gray-500">
+            <div className="flex items-center gap-4 text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
               <span>{collection.verseCount} verse{collection.verseCount === 1 ? '' : 's'}</span>
               {collection.isPublic && (
-                <span className="text-blue-600">Public</span>
+                <span className="badge">Public</span>
               )}
             </div>
           </div>

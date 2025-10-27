@@ -24,7 +24,7 @@ export default function RemoveFromCollectionButton({
     <button
       onClick={handleRemove}
       disabled={isPending}
-      className="px-3 py-1 text-xs text-red-600 hover:text-red-800 hover:bg-red-50 rounded disabled:opacity-50"
+      className="px-3 py-1 text-xs text-red-600 hover:text-red-800 hover:bg-red-50 rounded disabled:opacity-50 transition-colors"
       title="Remove from collection"
     >
       Remove from Collection

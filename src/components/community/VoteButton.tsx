@@ -25,16 +25,17 @@ export default function VoteButton({ tagId, currentVotes, userVote }: VoteButton
         disabled={isPending}
         className={`px-2 py-1 rounded transition-colors ${
           userVote === 1
-            ? 'bg-green-500 text-white'
-            : 'bg-gray-200 hover:bg-green-100 text-gray-700'
+            ? 'bg-emerald-500 text-white'
+            : 'hover:bg-emerald-100'
         } disabled:opacity-50`}
+        style={userVote === 1 ? {} : { background: 'rgba(16, 185, 129, 0.1)', color: 'var(--dark-green)' }}
         aria-label={userVote === 1 ? 'Remove upvote' : 'Upvote'}
         title={userVote === 1 ? 'Remove upvote' : 'Upvote'}
       >
         ▲
       </button>
 
-      <span className="font-semibold min-w-[2rem] text-center text-gray-900">
+      <span className="font-semibold min-w-[2rem] text-center text-accent">
         {currentVotes}
       </span>
 
@@ -44,8 +45,9 @@ export default function VoteButton({ tagId, currentVotes, userVote }: VoteButton
         className={`px-2 py-1 rounded transition-colors ${
           userVote === -1
             ? 'bg-red-500 text-white'
-            : 'bg-gray-200 hover:bg-red-100 text-gray-700'
+            : 'hover:bg-red-100'
         } disabled:opacity-50`}
+        style={userVote === -1 ? {} : { background: 'rgba(239, 68, 68, 0.1)', color: '#dc2626' }}
         aria-label={userVote === -1 ? 'Remove downvote' : 'Downvote'}
         title={userVote === -1 ? 'Remove downvote' : 'Downvote'}
       >

@@ -38,9 +38,9 @@ export async function VerseCard({ verse, audioUrl, showTags = true, userCollecti
   }
 
   return (
-    <div className="bg-white border rounded-lg p-6 mb-4 shadow-sm hover:shadow-md transition-shadow">
+    <div className="card card-hover animate-fade-in">
       <div className="flex justify-between items-center mb-2">
-        <div className="text-sm text-gray-700">
+        <div className="text-sm font-medium" style={{ color: 'rgba(0,0,0,0.6)' }}>
           {verse.verse_key}
         </div>
         
@@ -48,12 +48,12 @@ export async function VerseCard({ verse, audioUrl, showTags = true, userCollecti
         {audioUrl && <VerseAudioPlayer audioUrl={audioUrl} />}
       </div>
       
-      <div className="text-2xl font-arabic text-right mb-4 leading-loose text-gray-900">
+      <div className="text-2xl font-arabic text-right mb-4 leading-loose text-accent">
         {verse.text_uthmani}
       </div>
       
       {verse.translations?.[0] && (
-        <div className="text-gray-700">
+        <div style={{ color: 'var(--foreground)' }}>
           {verse.translations[0].text}
         </div>
       )}

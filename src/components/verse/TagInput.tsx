@@ -76,7 +76,7 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
 
   if (!userId) {
     return (
-      <div className="mt-4 text-sm text-gray-500">
+      <div className="mt-4 text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
         Sign in to add personal tags
       </div>
     );
@@ -91,13 +91,13 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Add a tag..."
-            className="flex-1 px-3 py-2 border rounded-md text-gray-900"
+            className="input flex-1"
             maxLength={50}
           />
           <button
             type="submit"
             disabled={isPending || !isValidTag(input)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+            className="btn-primary disabled:opacity-50"
           >
             Add
           </button>
@@ -114,7 +114,7 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
               className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
                 tag.isPublic
                   ? 'bg-purple-100 text-purple-800'
-                  : 'bg-blue-100 text-blue-800'
+                  : 'bg-emerald-100 text-emerald-800'
               }`}
             >
               <span>#{tag.tagText}</span>

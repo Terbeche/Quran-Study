@@ -22,8 +22,8 @@ export default async function CommunityTagsPreview({ verseKey }: CommunityTagsPr
   }
 
   return (
-    <div className="mt-4 pt-4 border-t">
-      <p className="text-sm text-gray-600 mb-2">Community tags:</p>
+    <div className="mt-4 pt-4" style={{ borderTop: '1px solid rgba(16, 185, 129, 0.1)' }}>
+      <p className="text-sm mb-2" style={{ color: 'rgba(0,0,0,0.6)' }}>Community tags:</p>
       <div className="flex flex-wrap gap-2">
         {topTags.map((tag) => (
           <span

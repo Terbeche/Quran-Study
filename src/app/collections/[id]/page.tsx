@@ -63,19 +63,19 @@ export default async function CollectionDetailPage({
   );
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4">
+    <div className="max-w-4xl mx-auto py-8 px-4 animate-fade-in">
       <div className="mb-6">
         <Link
           href="/collections"
-          className="text-blue-600 hover:underline text-sm mb-4 inline-block"
+          className="link text-sm mb-4 inline-block"
         >
           ← Back to Collections
         </Link>
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{collection.name}</h1>
+            <h1 className="section-title mb-2">{collection.name}</h1>
             {collection.description && (
-              <p className="text-gray-600">{collection.description}</p>
+              <p style={{ color: 'var(--foreground)' }}>{collection.description}</p>
             )}
           </div>
           <EditCollectionButton
@@ -84,19 +84,19 @@ export default async function CollectionDetailPage({
             currentDescription={collection.description}
           />
         </div>
-        <p className="text-sm text-gray-500 mt-2">
+        <p className="text-sm mt-2" style={{ color: 'rgba(0,0,0,0.5)' }}>
           {verses.length} verse{verses.length === 1 ? '' : 's'} in this collection
         </p>
       </div>
 
       {verses.length === 0 && (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <p className="text-gray-500 mb-4">
+        <div className="text-center py-12 card">
+          <p className="mb-4" style={{ color: 'rgba(0,0,0,0.5)' }}>
             No verses yet. Add verses from the surah pages!
           </p>
           <Link
             href="/"
-            className="text-blue-600 hover:underline"
+            className="link"
           >
             Browse Quran
           </Link>
@@ -111,7 +111,7 @@ export default async function CollectionDetailPage({
                 <VerseCard verse={verse} showTags={false} />
                 {notes && (
                   <div className="mt-2 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-                    <p className="text-sm text-gray-700">📝 {notes}</p>
+                    <p className="text-sm" style={{ color: 'var(--foreground)' }}>📝 {notes}</p>
                   </div>
                 )}
                 <div className="mt-2 flex justify-end">

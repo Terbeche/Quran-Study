@@ -33,9 +33,9 @@ export async function VerseCollectionBadges({ verseKey }: VerseCollectionBadgesP
   }
 
   return (
-    <div className="mt-3 pt-3 border-t border-gray-100">
+    <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(16, 185, 129, 0.1)' }}>
       <div className="flex items-start gap-2">
-        <span className="text-xs text-gray-500 font-medium mt-1">In Collections:</span>
+        <span className="text-xs font-medium mt-1" style={{ color: 'rgba(0,0,0,0.5)' }}>In Collections:</span>
         <div className="flex flex-wrap gap-2">
           {verseCollections.map((collection) => (
             <Link
