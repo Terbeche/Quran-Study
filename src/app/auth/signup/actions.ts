@@ -28,17 +28,14 @@ export async function signUpAction(formData: FormData) {
       password: hashedPassword,
     });
 
-  return { success: true };
+    return { success: true };
   } catch (error) {
-    // Log the actual error for debugging
     console.error('Signup error:', error);
     
-    // Check if it's a unique constraint violation (duplicate email)
     if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
       return { error: 'Email already exists' };
     }
     
-    // Return generic error for other issues
     return { error: 'Failed to create account. Please try again.' };
   }
 }

@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp, integer, boolean, uuid, primaryKey } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, integer, boolean, uuid, primaryKey, unique, varchar } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
 // Users table
@@ -49,12 +49,16 @@ export const accounts = pgTable('accounts', {
 export const tags = pgTable('tags', {
   id: uuid('id').defaultRandom().primaryKey(),
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  verseKey: text('verse_key').notNull(),
-  tagText: text('tag_text').notNull(),
+  verseKey: varchar('verse_key', { length: 10 }).notNull(),
+  tagText: varchar('tag_text', { length: 50 }).notNull(),
   isPublic: boolean('is_public').default(false).notNull(),
+  votes: integer('votes').default(0).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
-});
+}, (table) => ({
+  // Prevent duplicate tags per user per verse
+  uniqueUserVerseTag: unique().on(table.userId, table.verseKey, table.tagText),
+}));
 
 // Tag votes table
 export const tagVotes = pgTable('tag_votes', {
