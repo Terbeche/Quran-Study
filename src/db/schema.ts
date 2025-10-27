@@ -87,9 +87,13 @@ export const collections = pgTable('collections', {
 export const collectionVerses = pgTable('collection_verses', {
   id: uuid('id').defaultRandom().primaryKey(),
   collectionId: uuid('collection_id').notNull().references(() => collections.id, { onDelete: 'cascade' }),
-  verseKey: text('verse_key').notNull(),
-  addedAt: timestamp('added_at').defaultNow().notNull(),
-});
+  verseKey: varchar('verse_key', { length: 10 }).notNull(),
+  position: integer('position').notNull().default(0),
+  notes: varchar('notes', { length: 500 }),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+}, (table) => ({
+  uniqueCollectionVerse: unique().on(table.collectionId, table.verseKey),
+}));
 
 // Relations
 export const usersRelations = relations(users, ({ many }) => ({

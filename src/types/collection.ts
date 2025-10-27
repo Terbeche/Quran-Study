@@ -1,5 +1,3 @@
-import type { CollectionVerse } from './user';
-
 export interface Collection {
   id: string;
   userId: string;
@@ -8,5 +6,26 @@ export interface Collection {
   isPublic: boolean;
   createdAt: Date;
   updatedAt: Date;
-  verses?: CollectionVerse[];
+}
+
+export interface CollectionVerse {
+  id: string;
+  collectionId: string;
+  verseKey: string;
+  position: number;
+  notes: string | null;
+  createdAt: Date;
+}
+
+export interface CollectionWithCount extends Collection {
+  verseCount: number;
+}
+
+export interface CollectionWithVerses extends Collection {
+  verses: (CollectionVerse & {
+    verse?: {
+      textUthmani: string;
+      translation: string;
+    };
+  })[];
 }

@@ -4,7 +4,12 @@ import Link from 'next/link';
 import { getChapter } from '@/lib/api/chapters';
 import { getVersesByChapter } from '@/lib/api/verses';
 import { getChapterAudio, getVerseAudioFiles } from '@/lib/quran-api/client';
+import { auth } from '@/auth';
+import { db } from '@/db';
+import { collections } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 import type { Chapter, Verse } from '@/types/verse';
+import type { Collection } from '@/types/collection';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,6 +20,19 @@ interface SurahPageProps {
 export default async function SurahPage({ params }: SurahPageProps) {
   const { id } = await params;
   const chapterId = Number.parseInt(id);
+
+  // Check if user is authenticated
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  // Fetch user's collections if logged in
+  let userCollections: Collection[] = [];
+  if (userId) {
+    userCollections = await db
+      .select()
+      .from(collections)
+      .where(eq(collections.userId, userId));
+  }
 
   // Fetch chapter info, verses, and audio files
   let chapter: Chapter | null = null;
@@ -102,6 +120,7 @@ export default async function SurahPage({ params }: SurahPageProps) {
             key={verse.verse_key} 
             verse={verse}
             audioUrl={verseAudioFiles[index]?.url}
+            userCollections={userCollections}
           />
         ))}
       </div>
