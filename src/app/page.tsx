@@ -6,6 +6,7 @@ import { getVerseAudio } from '@/lib/quran-api/client';
 import type { Chapter, Verse } from '@/types/verse';
 
 export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 export default async function Home() {
   // Fetch featured verse (Ayat al-Kursi)

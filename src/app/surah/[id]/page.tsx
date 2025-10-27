@@ -1,5 +1,5 @@
 import { VerseCard } from '@/components/verse/VerseCard';
-import { ChapterAudioPlayer } from '@/components/verse/ChapterAudioPlayer';
+import { ReciterAudioPlayer } from '@/components/verse/ReciterAudioPlayer';
 import Link from 'next/link';
 import { getChapter } from '@/lib/api/chapters';
 import { getVersesByChapter } from '@/lib/api/verses';
@@ -46,7 +46,7 @@ export default async function SurahPage({ params }: SurahPageProps) {
     const [chapterData, versesData, chapterAudioData, verseAudioData] = await Promise.all([
       getChapter(chapterId),
       getVersesByChapter(chapterId, 1, 50),
-      getChapterAudio(7, chapterId), // Recitation ID 7 = Alafasy
+      getChapterAudio(7, chapterId, true), // Recitation ID 7 = Alafasy, segments=true for timestamps
       getVerseAudioFiles(7, chapterId, 1, 50)
     ]);
     
@@ -106,10 +106,11 @@ export default async function SurahPage({ params }: SurahPageProps) {
 
       {/* Chapter Audio Player */}
       {chapterAudioUrl && (
-        <ChapterAudioPlayer 
+        <ReciterAudioPlayer 
+          chapterId={chapterId}
           totalVerses={chapter.verses_count}
-          audioUrl={chapterAudioUrl}
-          timestamps={chapterAudioTimestamps}
+          initialAudioUrl={chapterAudioUrl}
+          initialTimestamps={chapterAudioTimestamps}
         />
       )}
 
