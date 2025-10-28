@@ -260,8 +260,9 @@ export function ChapterAudioPlayer({
         <button
           onClick={handlePrevious}
           disabled={currentVerse === 1}
-          className="w-12 h-12 rounded-full bg-emerald-50 hover:bg-emerald-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center text-emerald-600 hover:scale-110 disabled:hover:scale-100"
+          className="w-12 h-12 rounded-full bg-emerald-50 hover:bg-emerald-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center text-emerald-600 hover:scale-110 disabled:hover:scale-100 cursor-pointer"
           aria-label="Previous verse"
+          title="Previous verse (←)"
         >
           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
             <path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z" />
@@ -270,10 +271,11 @@ export function ChapterAudioPlayer({
         
         <button
           onClick={handlePlayPause}
-          className={`w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-110 ${
+          className={`w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-110 cursor-pointer ${
             isPlaying ? 'animate-pulse-glow' : ''
           }`}
           aria-label={isPlaying ? 'Pause' : 'Play'}
+          title={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
         >
           {isPlaying ? (
             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
@@ -289,8 +291,9 @@ export function ChapterAudioPlayer({
         <button
           onClick={handleNext}
           disabled={currentVerse === totalVerses}
-          className="w-12 h-12 rounded-full bg-emerald-50 hover:bg-emerald-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center text-emerald-600 hover:scale-110 disabled:hover:scale-100"
+          className="w-12 h-12 rounded-full bg-emerald-50 hover:bg-emerald-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center text-emerald-600 hover:scale-110 disabled:hover:scale-100 cursor-pointer"
           aria-label="Next verse"
+          title="Next verse (→)"
         >
           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
             <path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z" />
@@ -318,13 +321,14 @@ export function ChapterAudioPlayer({
       <div className="flex items-center gap-4 flex-wrap border-t border-emerald-100 pt-4">
         {/* Reciter Selector */}
         {reciters.length > 0 && onReciterChange && (
-          <div className="flex items-center gap-2 bg-emerald-50 rounded-lg px-3 py-2">
+          <div className="flex items-center gap-2 bg-emerald-50 rounded-lg px-3 py-2 hover:bg-emerald-100 transition-all cursor-pointer hover:shadow-sm">
             <span className="text-emerald-700 text-xl">👤</span>
             <select
               id="reciter-select"
               value={currentReciterId || 7}
               onChange={(e) => onReciterChange(Number(e.target.value))}
-              className="bg-transparent text-sm text-gray-700 font-medium border-none focus:outline-none cursor-pointer"
+              className="bg-transparent text-sm text-gray-700 font-medium border-none focus:outline-none cursor-pointer focus:ring-2 focus:ring-emerald-300 rounded"
+              title="Select reciter"
             >
               {reciters.map((reciter) => (
                 <option key={reciter.id} value={reciter.id}>
@@ -336,13 +340,14 @@ export function ChapterAudioPlayer({
         )}
 
         {/* Loop Mode Selector */}
-        <div className="flex items-center gap-2 bg-emerald-50 rounded-lg px-3 py-2">
+        <div className="flex items-center gap-2 bg-emerald-50 rounded-lg px-3 py-2 hover:bg-emerald-100 transition-all cursor-pointer hover:shadow-sm">
           <span className="text-emerald-700 text-xl">🔁</span>
           <select
             id="loop-mode"
             value={loopMode}
             onChange={(e) => setLoopMode(e.target.value as 'off' | 'verse' | 'chapter')}
-            className="bg-transparent text-sm text-gray-700 font-medium border-none focus:outline-none cursor-pointer"
+            className="bg-transparent text-sm text-gray-700 font-medium border-none focus:outline-none cursor-pointer focus:ring-2 focus:ring-emerald-300 rounded"
+            title="Loop mode"
           >
             <option value="off">No Loop</option>
             <option value="verse">Loop Verse</option>

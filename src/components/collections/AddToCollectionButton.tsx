@@ -52,7 +52,7 @@ export default function AddToCollectionButton({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="text-sm link"
+        className="text-sm link cursor-pointer hover:underline transition-all"
       >
         + Add to Collection
       </button>
@@ -76,10 +76,10 @@ export default function AddToCollectionButton({
                     key={collection.id}
                     onClick={() => !isAdded && handleAdd(collection.id)}
                     disabled={isPending || isAdded}
-                    className={`w-full text-left p-3 border rounded transition ${
+                    className={`w-full text-left p-3 border rounded transition-all cursor-pointer ${
                       isAdded 
                         ? 'bg-green-50 border-green-300 cursor-not-allowed' 
-                        : 'hover:bg-emerald-50 disabled:opacity-50'
+                        : 'hover:bg-emerald-50 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed'
                     }`}
                     style={isAdded ? {} : { borderColor: 'rgba(16, 185, 129, 0.2)' }}
                   >
@@ -104,7 +104,7 @@ export default function AddToCollectionButton({
                 setIsOpen(false);
                 setError('');
               }}
-              className="mt-4 w-full px-4 py-2 border rounded transition-colors text-accent"
+              className="mt-4 w-full px-4 py-2 border rounded transition-all text-accent cursor-pointer hover:bg-emerald-50 hover:shadow-sm"
               style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}
             >
               Cancel

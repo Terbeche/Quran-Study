@@ -58,7 +58,7 @@ export function VerseCollectionBadgesClient({ verseKey, initialCollections }: Ve
               </Link>
               <button
                 onClick={() => handleRemove(collection.id)}
-                className="hover:text-red-600 font-bold ml-1"
+                className="hover:text-red-600 hover:scale-110 font-bold ml-1 transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isPending}
                 aria-label={`Remove from ${collection.name}`}
                 title="Remove from collection"

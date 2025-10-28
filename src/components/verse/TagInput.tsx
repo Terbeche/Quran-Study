@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useTransition, useRef } from 'react';
-import { createTagAction, deleteTagAction, toggleTagVisibilityAction } from '@/actions/tag-actions';
+import { createTagAction, deleteTagAction } from '@/actions/tag-actions';
 import { normalizeTag, isValidTag } from '@/lib/utils/tag-normalizer';
+import TagToggleButton from '@/components/tags/TagToggleButton';
 import type { Tag } from '@/types/tag';
 
 interface TagInputProps {
@@ -89,29 +90,6 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
     });
   };
 
-  const handleToggleVisibility = async (tagId: string, currentIsPublic: boolean) => {
-    if (isPending) return;
-    
-    startTransition(async () => {
-      setError('');
-      
-      // Optimistically update the tag visibility
-      setTags(prev => prev.map(tag =>
-        tag.id === tagId ? { ...tag, isPublic: !currentIsPublic } : tag
-      ));
-
-      const result = await toggleTagVisibilityAction(tagId, !currentIsPublic);
-
-      if (result.error) {
-        setError(result.error);
-        // Rollback on error
-        setTags(prev => prev.map(tag =>
-          tag.id === tagId ? { ...tag, isPublic: currentIsPublic } : tag
-        ));
-      }
-    });
-  };
-
   if (!userId) {
     return (
       <div className="mt-4 text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
@@ -149,31 +127,29 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
           {tags.map((tag) => (
             <div
               key={tag.id}
-              className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${
-                tag.isPublic
-                  ? 'bg-purple-100 text-purple-800'
-                  : 'bg-emerald-100 text-emerald-800'
-              }`}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-gray-100"
+              style={{ color: 'var(--foreground)' }}
             >
               <span>#{tag.tagText}</span>
               
               {/* Toggle visibility button */}
-              <button
-                onClick={() => handleToggleVisibility(tag.id, tag.isPublic)}
-                className="hover:opacity-70 text-xs"
-                disabled={isPending}
-                title={tag.isPublic ? 'Make private' : 'Make public'}
-                aria-label={tag.isPublic ? 'Make tag private' : 'Make tag public'}
-              >
-                {tag.isPublic ? '🌐' : '🔒'}
-              </button>
+              <TagToggleButton
+                tagId={tag.id}
+                isPublic={tag.isPublic}
+                onToggle={(newIsPublic) => {
+                  setTags(prev => prev.map(t =>
+                    t.id === tag.id ? { ...t, isPublic: newIsPublic } : t
+                  ));
+                }}
+              />
 
               {/* Delete button */}
               <button
                 onClick={() => handleDelete(tag.id)}
-                className="hover:text-red-600 font-bold"
+                className="hover:text-red-600 hover:scale-110 font-bold transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isPending}
                 aria-label={`Delete tag ${tag.tagText}`}
+                title="Delete tag"
               >
                 ×
               </button>

@@ -116,15 +116,21 @@ body {
   border-radius: 0.75rem;
   box-shadow: 0 10px 20px -8px rgba(16,185,129,0.25);
   transition: transform .18s ease, box-shadow .18s ease, opacity .18s ease;
+  cursor: pointer;
 }
 .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 14px 28px -10px rgba(16,185,129,0.28); }
+.btn-primary:disabled { cursor: not-allowed; }
 
 .btn-ghost {
   color: var(--dark-green);
   background: transparent;
   padding: 0.35rem 0.55rem;
   border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color .18s ease;
 }
+.btn-ghost:hover { background: rgba(16,185,129,0.1); }
+.btn-ghost:disabled { cursor: not-allowed; opacity: 0.5; }
 
 .text-accent { color: var(--dark-green); }
 
@@ -176,6 +182,7 @@ body {
 .link {
   color: var(--primary-green);
   transition: color 0.2s ease;
+  cursor: pointer;
 }
 
 .link:hover {

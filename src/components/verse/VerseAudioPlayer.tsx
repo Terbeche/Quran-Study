@@ -25,12 +25,13 @@ export default function VerseAudioPlayer({ audioUrl }: VerseAudioPlayerProps) {
     <>
       <button
         onClick={handlePlayPause}
-        className="px-3 py-1 rounded-md text-sm transition-colors"
+        className="px-3 py-1 rounded-md text-sm transition-all hover:shadow-sm cursor-pointer hover:scale-105"
         style={{ 
           background: isPlaying ? 'rgba(16, 185, 129, 0.2)' : 'rgba(16, 185, 129, 0.1)',
           color: 'var(--dark-green)'
         }}
         aria-label={isPlaying ? 'Pause' : 'Play'}
+        title={isPlaying ? 'Pause audio' : 'Play audio'}
       >
         {isPlaying ? '⏸️ Pause' : '▶️ Play'}
       </button>

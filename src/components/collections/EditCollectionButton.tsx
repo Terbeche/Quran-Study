@@ -44,7 +44,7 @@ export default function EditCollectionButton({
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="px-3 py-1 text-xs transition-colors hover:bg-emerald-50 rounded"
+        className="px-3 py-1 text-xs transition-all hover:bg-emerald-50 rounded cursor-pointer hover:shadow-sm"
         style={{ color: 'var(--primary-green)' }}
         title="Edit collection"
       >
@@ -97,7 +97,7 @@ export default function EditCollectionButton({
                     setDescription(currentDescription || '');
                     setError('');
                   }}
-                  className="px-4 py-2 border rounded-md transition-colors text-accent"
+                  className="px-4 py-2 border rounded-md transition-all text-accent cursor-pointer hover:bg-emerald-50 hover:shadow-sm"
                   style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}
                 >
                   Cancel
@@ -105,7 +105,7 @@ export default function EditCollectionButton({
                 <button
                   type="submit"
                   disabled={isPending}
-                  className="btn-primary disabled:opacity-50"
+                  className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isPending ? 'Saving...' : 'Save Changes'}
                 </button>

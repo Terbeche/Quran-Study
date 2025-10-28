@@ -23,11 +23,11 @@ export default function VoteButton({ tagId, currentVotes, userVote }: VoteButton
       <button
         onClick={() => handleVote(1)}
         disabled={isPending}
-        className={`px-2 py-1 rounded transition-colors ${
+        className={`px-2 py-1 rounded transition-all cursor-pointer hover:scale-110 ${
           userVote === 1
             ? 'bg-emerald-500 text-white'
             : 'hover:bg-emerald-100'
-        } disabled:opacity-50`}
+        } disabled:opacity-50 disabled:cursor-not-allowed`}
         style={userVote === 1 ? {} : { background: 'rgba(16, 185, 129, 0.1)', color: 'var(--dark-green)' }}
         aria-label={userVote === 1 ? 'Remove upvote' : 'Upvote'}
         title={userVote === 1 ? 'Remove upvote' : 'Upvote'}
@@ -42,11 +42,11 @@ export default function VoteButton({ tagId, currentVotes, userVote }: VoteButton
       <button
         onClick={() => handleVote(-1)}
         disabled={isPending}
-        className={`px-2 py-1 rounded transition-colors ${
+        className={`px-2 py-1 rounded transition-all cursor-pointer hover:scale-110 ${
           userVote === -1
             ? 'bg-red-500 text-white'
             : 'hover:bg-red-100'
-        } disabled:opacity-50`}
+        } disabled:opacity-50 disabled:cursor-not-allowed`}
         style={userVote === -1 ? {} : { background: 'rgba(239, 68, 68, 0.1)', color: '#dc2626' }}
         aria-label={userVote === -1 ? 'Remove downvote' : 'Downvote'}
         title={userVote === -1 ? 'Remove downvote' : 'Downvote'}
