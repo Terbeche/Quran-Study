@@ -3,12 +3,15 @@ import { VerseCard } from '@/components/verse/VerseCard';
 import { getChapters } from '@/lib/api/chapters';
 import { getVerseByKey } from '@/lib/api/verses';
 import { getVerseAudio } from '@/lib/quran-api/client';
+import { auth } from '@/auth';
 import type { Chapter, Verse } from '@/types/verse';
 
 export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
 export default async function Home() {
+  const session = await auth();
+  
   // Fetch featured verse (Ayat al-Kursi)
   let featuredVerse: Verse | null = null;
   let featuredVerseAudio: string | undefined;
@@ -57,13 +60,15 @@ export default async function Home() {
           >
             🔍 Search Quran
           </Link>
-          <Link
-            href="/auth/signin"
-            className="px-6 py-3 border-2 rounded-xl font-medium transition-all duration-300 hover:bg-emerald-50"
-            style={{ borderColor: 'var(--primary-green)', color: 'var(--primary-green)' }}
-          >
-            Sign In to Tag Verses
-          </Link>
+          {!session?.user && (
+            <Link
+              href="/auth/signin"
+              className="px-6 py-3 border-2 rounded-xl font-medium transition-all duration-300 hover:bg-emerald-50"
+              style={{ borderColor: 'var(--primary-green)', color: 'var(--primary-green)' }}
+            >
+              Sign In to Tag Verses
+            </Link>
+          )}
         </div>
       </div>
 
