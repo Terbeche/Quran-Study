@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { createPortal } from 'react-dom';
 import { updateCollectionAction } from '@/actions/collection-actions';
 
 interface EditCollectionButtonProps {
@@ -50,9 +51,9 @@ export default function EditCollectionButton({
         Edit
       </button>
 
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="card glass max-w-md w-full">
+      {isOpen && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+          <div className="card glass max-w-md w-full relative z-10">
             <h2 className="text-2xl font-bold mb-4 text-accent">Edit Collection</h2>
 
             <form onSubmit={handleSubmit}>
@@ -111,7 +112,8 @@ export default function EditCollectionButton({
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

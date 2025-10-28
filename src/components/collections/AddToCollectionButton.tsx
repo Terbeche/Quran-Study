@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { addVerseToCollectionAction, getVerseCollectionsAction } from '@/actions/collection-actions';
 import type { Collection } from '@/types/collection';
 
@@ -56,9 +57,9 @@ export default function AddToCollectionButton({
         + Add to Collection
       </button>
 
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-50">
-          <div className="card glass max-w-md w-full max-h-96 overflow-y-auto">
+      {isOpen && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+          <div className="card glass max-w-md w-full max-h-96 overflow-y-auto relative z-10">
             <h2 className="text-xl font-bold mb-4 text-accent">Add to Collection</h2>
 
             {error && (
@@ -109,7 +110,8 @@ export default function AddToCollectionButton({
               Cancel
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );
