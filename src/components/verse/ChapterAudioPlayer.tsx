@@ -61,15 +61,25 @@ export function ChapterAudioPlayer({
       console.log('No timestamp found for next verse', { currentVerse, nextVerseIndex, timestampsLength: timestamps.length });
       return;
     }
-      
-    // Jump to next verse timestamp (convert ms to seconds)
-    audioRef.current.currentTime = nextTimestamp.timestamp_from / 1000;
-    setCurrentVerse(currentVerse + 1);
     
-    if (!isPlaying) {
-      audioRef.current.play().catch(console.error);
-    }
-  }, [audioRef, currentVerse, totalVerses, timestamps, isPlaying]);
+    const newVerseNumber = currentVerse + 1;
+      
+    // Update verse number first
+    setCurrentVerse(newVerseNumber);
+    
+    // Then jump to next verse timestamp (convert ms to seconds)
+    // Use a slight delay to ensure state updates first
+    setTimeout(() => {
+      if (audioRef.current) {
+        audioRef.current.currentTime = nextTimestamp.timestamp_from / 1000;
+        
+        // Resume playing if it was already playing
+        if (isPlaying && audioRef.current.paused) {
+          audioRef.current.play().catch(console.error);
+        }
+      }
+    }, 0);
+  }, [currentVerse, totalVerses, timestamps, isPlaying]);
 
   const handlePrevious = useCallback(() => {
     if (!audioRef.current) return;
@@ -89,16 +99,24 @@ export function ChapterAudioPlayer({
       return;
     }
     
-    console.log('Jumping to previous verse', { from: currentVerse, to: currentVerse - 1, timestamp: prevTimestamp.timestamp_from / 1000 });
+    const newVerseNumber = currentVerse - 1;
     
-    // Jump to previous verse timestamp (convert ms to seconds)
-    audioRef.current.currentTime = prevTimestamp.timestamp_from / 1000;
-    setCurrentVerse(currentVerse - 1);
+    // Update verse number first
+    setCurrentVerse(newVerseNumber);
     
-    if (!isPlaying) {
-      audioRef.current.play().catch(console.error);
-    }
-  }, [audioRef, currentVerse, timestamps, isPlaying]);
+    // Then jump to previous verse timestamp (convert ms to seconds)
+    // Use a slight delay to ensure state updates first
+    setTimeout(() => {
+      if (audioRef.current) {
+        audioRef.current.currentTime = prevTimestamp.timestamp_from / 1000;
+        
+        // Resume playing if it was already playing
+        if (isPlaying && audioRef.current.paused) {
+          audioRef.current.play().catch(console.error);
+        }
+      }
+    }, 0);
+  }, [currentVerse, timestamps, isPlaying]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -132,11 +150,21 @@ export function ChapterAudioPlayer({
             if (targetVerse <= totalVerses && timestamps[targetVerse - 1]) {
               if (audioRef.current) {
                 console.log(`Jumping forward by ${jumpCount} verses from ${currentVerse} to ${targetVerse}`);
-                audioRef.current.currentTime = timestamps[targetVerse - 1].timestamp_from / 1000;
+                
+                // Update verse number first
                 setCurrentVerse(targetVerse);
-                if (!isPlaying) {
-                  audioRef.current.play().catch(console.error);
-                }
+                
+                // Then update audio position with slight delay
+                setTimeout(() => {
+                  if (audioRef.current) {
+                    audioRef.current.currentTime = timestamps[targetVerse - 1].timestamp_from / 1000;
+                    
+                    // Resume playing if it was already playing
+                    if (isPlaying && audioRef.current.paused) {
+                      audioRef.current.play().catch(console.error);
+                    }
+                  }
+                }, 0);
               }
             }
           }
@@ -150,6 +178,9 @@ export function ChapterAudioPlayer({
   // Update current verse based on playback position
   const handleTimeUpdate = () => {
     if (!audioRef.current) return;
+    
+    // Only auto-update verse number when actually playing
+    if (!isPlaying) return;
     
     const currentTimeMs = audioRef.current.currentTime * 1000;
     const currentTimestamp = timestamps[currentVerse - 1];
