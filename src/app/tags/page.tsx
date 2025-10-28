@@ -41,9 +41,27 @@ export default async function MyTagsPage() {
 
       {Object.entries(groupedTags).map(([tagText, tagList]) => (
         <div key={tagText} className="mb-6 card">
-          <h2 className="text-xl font-semibold mb-3 text-accent">
-            #{tagText} <span className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>({tagList.length} verse{tagList.length > 1 ? 's' : ''})</span>
-          </h2>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-xl font-semibold text-accent">
+              <Link 
+                href={`/search?q=${encodeURIComponent(tagText)}&type=tag`}
+                className="hover:underline"
+                title="Search verses with this tag"
+              >
+                #{tagText}
+              </Link>
+              {' '}
+              <span className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
+                ({tagList.length} verse{tagList.length > 1 ? 's' : ''})
+              </span>
+            </h2>
+            <Link
+              href={`/search?q=${encodeURIComponent(tagText)}&type=tag`}
+              className="text-sm link"
+            >
+              Search this tag →
+            </Link>
+          </div>
           <div className="space-y-2">
             {tagList.map((tag) => (
               <div

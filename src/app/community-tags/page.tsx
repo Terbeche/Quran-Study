@@ -68,10 +68,26 @@ export default async function CommunityTagsPage() {
           return (
             <div key={tagText} className="card">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-semibold text-accent">#{tagText}</h2>
-                <div className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
-                  <span className="font-medium">{tagList.length}</span> verse
-                  {tagList.length > 1 ? 's' : ''} · <span className="font-medium">{totalVotes}</span> total votes
+                <h2 className="text-2xl font-semibold text-accent">
+                  <Link 
+                    href={`/search?q=${encodeURIComponent(tagText)}&type=tag`}
+                    className="hover:underline"
+                    title="Search verses with this tag"
+                  >
+                    #{tagText}
+                  </Link>
+                </h2>
+                <div className="flex items-center gap-4">
+                  <div className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
+                    <span className="font-medium">{tagList.length}</span> verse
+                    {tagList.length > 1 ? 's' : ''} · <span className="font-medium">{totalVotes}</span> total votes
+                  </div>
+                  <Link
+                    href={`/search?q=${encodeURIComponent(tagText)}&type=tag`}
+                    className="text-sm link whitespace-nowrap"
+                  >
+                    Search →
+                  </Link>
                 </div>
               </div>
 
