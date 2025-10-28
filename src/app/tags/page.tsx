@@ -63,25 +63,28 @@ export default async function MyTagsPage() {
             </Link>
           </div>
           <div className="space-y-2">
-            {tagList.map((tag) => (
-              <div
-                key={tag.id}
-                className="flex items-center justify-between p-3 rounded transition-all"
-                style={{ background: 'rgba(16, 185, 129, 0.05)' }}
-              >
-                <Link
-                  href={`/surah/${tag.verseKey.split(':')[0]}`}
-                  className="link font-medium"
+            {tagList.map((tag) => {
+              const [chapterId, verseNumber] = tag.verseKey.split(':');
+              return (
+                <div
+                  key={tag.id}
+                  className="flex items-center justify-between p-3 rounded transition-all"
+                  style={{ background: 'rgba(16, 185, 129, 0.05)' }}
                 >
-                  Verse {tag.verseKey}
-                </Link>
-                
-                <div className="flex items-center gap-2">
-                  <TagToggleButton tagId={tag.id} isPublic={tag.isPublic} />
-                  <DeleteTagButton tagId={tag.id} />
+                  <Link
+                    href={`/surah/${chapterId}#verse-${verseNumber}`}
+                    className="link font-medium"
+                  >
+                    Verse {tag.verseKey}
+                  </Link>
+                  
+                  <div className="flex items-center gap-2">
+                    <TagToggleButton tagId={tag.id} isPublic={tag.isPublic} />
+                    <DeleteTagButton tagId={tag.id} />
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       ))}

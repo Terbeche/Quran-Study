@@ -92,26 +92,28 @@ export default async function CommunityTagsPage() {
               </div>
 
               <div className="space-y-2">
-                {tagList.map((tag) => (
-                  <div
-                    key={tag.id}
-                    className="flex items-center justify-between p-3 rounded transition-colors"
-                    style={{ background: 'rgba(16, 185, 129, 0.05)' }}
-                  >
-                    <Link
-                      href={`/surah/${tag.verseKey.split(':')[0]}`}
-                      className="link font-medium"
+                {tagList.map((tag) => {
+                  const [chapterId, verseNumber] = tag.verseKey.split(':');
+                  return (
+                    <div
+                      key={tag.id}
+                      className="flex items-center justify-between p-3 rounded transition-colors"
+                      style={{ background: 'rgba(16, 185, 129, 0.05)' }}
                     >
-                      Verse {tag.verseKey}
-                    </Link>
+                      <Link
+                        href={`/surah/${chapterId}#verse-${verseNumber}`}
+                        className="link font-medium"
+                      >
+                        Verse {tag.verseKey}
+                      </Link>
 
-                    {userId ? (
-                      <VoteButton
-                        tagId={tag.id}
-                        currentVotes={tag.votes}
-                        userVote={userVotes[tag.id] || null}
-                      />
-                    ) : (
+                      {userId ? (
+                        <VoteButton
+                          tagId={tag.id}
+                          currentVotes={tag.votes}
+                          userVote={userVotes[tag.id] || null}
+                        />
+                      ) : (
                       <div className="flex items-center gap-2" style={{ color: 'var(--foreground)' }}>
                         <span className="text-sm">↑ {tag.votes}</span>
                         <Link
@@ -123,7 +125,8 @@ export default async function CommunityTagsPage() {
                       </div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           );
