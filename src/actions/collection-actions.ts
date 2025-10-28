@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 import { db } from '@/db';
 import { collections, collectionVerses } from '@/db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+import { eq, and } from 'drizzle-orm';
 
 export async function createCollectionAction(name: string, description?: string) {
   const session = await auth();
@@ -148,27 +148,6 @@ export async function removeVerseFromCollectionAction(
   } catch (error) {
     console.error('Remove verse error:', error);
     return { error: 'Failed to remove verse' };
-  }
-}
-
-export async function getUserCollectionsAction() {
-  const session = await auth();
-
-  if (!session?.user?.id) {
-    return { error: 'Not authenticated' };
-  }
-
-  try {
-    const userCollections = await db
-      .select()
-      .from(collections)
-      .where(eq(collections.userId, session.user.id))
-      .orderBy(desc(collections.createdAt));
-
-    return { data: userCollections };
-  } catch (error) {
-    console.error('Get collections error:', error);
-    return { error: 'Failed to get collections' };
   }
 }
 
