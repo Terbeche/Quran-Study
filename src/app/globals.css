@@ -216,3 +216,13 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+/* Search result highlighting */
+em {
+  font-weight: 700;
+  font-style: normal;
+  color: var(--primary-green);
+  background: var(--light-green);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+}
