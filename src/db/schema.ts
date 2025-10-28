@@ -81,7 +81,10 @@ export const collections = pgTable('collections', {
   isPublic: boolean('is_public').default(false).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
-});
+}, (table) => ({
+  // Prevent duplicate collection names per user
+  uniqueUserCollectionName: unique().on(table.userId, table.name),
+}));
 
 // Collection verses junction table
 export const collectionVerses = pgTable('collection_verses', {

@@ -11,6 +11,13 @@ export default function CreateCollectionButton() {
   const [error, setError] = useState('');
   const [isPending, startTransition] = useTransition();
 
+  const handleOpen = () => {
+    setName('');
+    setDescription('');
+    setError('');
+    setIsOpen(true);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -35,7 +42,7 @@ export default function CreateCollectionButton() {
   return (
     <>
       <button
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpen}
         className="btn-primary"
       >
         Create Collection

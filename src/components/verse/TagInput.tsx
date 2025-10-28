@@ -1,6 +1,6 @@
 'use client';
 
-import { useOptimistic, useState, useTransition, useRef } from 'react';
+import { useState, useTransition, useRef } from 'react';
 import { createTagAction, deleteTagAction, toggleTagVisibilityAction } from '@/actions/tag-actions';
 import { normalizeTag, isValidTag } from '@/lib/utils/tag-normalizer';
 import type { Tag } from '@/types/tag';
@@ -15,12 +15,8 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
   const [isPending, startTransition] = useTransition();
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
+  const [tags, setTags] = useState<Tag[]>(initialTags);
   const tempIdCounter = useRef(0);
-
-  const [optimisticTags, addOptimisticTag] = useOptimistic(
-    initialTags,
-    (state, newTag: Tag) => [...state, newTag]
-  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +33,12 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
 
     const normalized = normalizeTag(input);
 
+    // Check if tag already exists locally
+    if (tags.some(tag => tag.tagText.toLowerCase() === normalized.toLowerCase())) {
+      setError('You already have this tag on this verse');
+      return;
+    }
+
     // Create optimistic tag with stable ID
     tempIdCounter.current += 1;
     const tempTag: Tag = {
@@ -52,25 +54,61 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
 
     setInput('');
     setError('');
+    
+    // Optimistically add the tag
+    setTags(prev => [...prev, tempTag]);
 
     startTransition(async () => {
-      addOptimisticTag(tempTag);
-      const result = await createTagAction(verseKey, input);
+      const result = await createTagAction(verseKey, normalized);
       if (result.error) {
+        // Remove the optimistic tag on error
+        setTags(prev => prev.filter(tag => tag.id !== tempTag.id));
         setError(result.error);
+      } else if (result.data) {
+        // Replace the temp tag with the real one
+        setTags(prev => prev.map(tag => 
+          tag.id === tempTag.id ? result.data : tag
+        ));
       }
     });
   };
 
   const handleDelete = (tagId: string) => {
     startTransition(async () => {
-      await deleteTagAction(tagId);
+      // Optimistically remove the tag
+      const tagToDelete = tags.find(tag => tag.id === tagId);
+      if (tagToDelete) {
+        setTags(prev => prev.filter(tag => tag.id !== tagId));
+        
+        const result = await deleteTagAction(tagId);
+        if (result.error) {
+          // Restore the tag on error
+          setTags(prev => [...prev, tagToDelete]);
+        }
+      }
     });
   };
 
-  const handleToggleVisibility = (tagId: string, currentIsPublic: boolean) => {
+  const handleToggleVisibility = async (tagId: string, currentIsPublic: boolean) => {
+    if (isPending) return;
+    
     startTransition(async () => {
-      await toggleTagVisibilityAction(tagId, !currentIsPublic);
+      setError('');
+      
+      // Optimistically update the tag visibility
+      setTags(prev => prev.map(tag =>
+        tag.id === tagId ? { ...tag, isPublic: !currentIsPublic } : tag
+      ));
+
+      const result = await toggleTagVisibilityAction(tagId, !currentIsPublic);
+
+      if (result.error) {
+        setError(result.error);
+        // Rollback on error
+        setTags(prev => prev.map(tag =>
+          tag.id === tagId ? { ...tag, isPublic: currentIsPublic } : tag
+        ));
+      }
     });
   };
 
@@ -106,9 +144,9 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
 
       {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
 
-      {optimisticTags.length > 0 && (
+      {tags.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">
-          {optimisticTags.map((tag) => (
+          {tags.map((tag) => (
             <div
               key={tag.id}
               className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium ${

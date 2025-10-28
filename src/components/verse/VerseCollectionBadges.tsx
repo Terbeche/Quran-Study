@@ -2,7 +2,7 @@ import { auth } from '@/auth';
 import { db } from '@/db';
 import { collections, collectionVerses } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
-import Link from 'next/link';
+import { VerseCollectionBadgesClient } from './VerseCollectionBadgesClient';
 
 interface VerseCollectionBadgesProps {
   readonly verseKey: string;
@@ -33,21 +33,9 @@ export async function VerseCollectionBadges({ verseKey }: VerseCollectionBadgesP
   }
 
   return (
-    <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(16, 185, 129, 0.1)' }}>
-      <div className="flex items-start gap-2">
-        <span className="text-xs font-medium mt-1" style={{ color: 'rgba(0,0,0,0.5)' }}>In Collections:</span>
-        <div className="flex flex-wrap gap-2">
-          {verseCollections.map((collection) => (
-            <Link
-              key={collection.id}
-              href={`/collections/${collection.id}`}
-              className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800 hover:bg-purple-200 transition-colors"
-            >
-              📚 {collection.name}
-            </Link>
-          ))}
-        </div>
-      </div>
-    </div>
+    <VerseCollectionBadgesClient
+      verseKey={verseKey}
+      initialCollections={verseCollections}
+    />
   );
 }

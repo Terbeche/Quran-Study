@@ -14,6 +14,12 @@ export async function createTagAction(verseKey: string, tagText: string, isPubli
     return { error: 'Not authenticated' };
   }
 
+  // Validate verse key format
+  const verseKeyPattern = /^\d+:\d+$/;
+  if (!verseKey || !verseKeyPattern.exec(verseKey)) {
+    return { error: 'Invalid verse key format' };
+  }
+
   const normalized = normalizeTag(tagText);
 
   if (!normalized) {
@@ -36,8 +42,13 @@ export async function createTagAction(verseKey: string, tagText: string, isPubli
 
     return { data: tag };
   } catch (error) {
-    if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
-      return { error: 'Tag already exists for this verse' };
+    console.error('Create tag error:', error);
+    // Check for unique constraint violation in the cause property
+    if (error && typeof error === 'object' && 'cause' in error) {
+      const cause = error.cause;
+      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === '23505') {
+        return { error: 'You already have this tag on this verse' };
+      }
     }
     return { error: 'Failed to create tag' };
   }

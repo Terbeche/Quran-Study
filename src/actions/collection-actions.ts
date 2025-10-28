@@ -13,13 +13,23 @@ export async function createCollectionAction(name: string, description?: string)
     return { error: 'Not authenticated' };
   }
 
+  // Validate collection name
+  const trimmedName = name.trim();
+  if (!trimmedName || trimmedName.length < 2) {
+    return { error: 'Collection name must be at least 2 characters' };
+  }
+
+  if (trimmedName.length > 100) {
+    return { error: 'Collection name is too long (max 100 characters)' };
+  }
+
   try {
     const [collection] = await db
       .insert(collections)
       .values({
         userId: session.user.id,
-        name,
-        description: description || null,
+        name: trimmedName,
+        description: description?.trim() || null,
       })
       .returning();
 
@@ -27,6 +37,13 @@ export async function createCollectionAction(name: string, description?: string)
     return { data: collection };
   } catch (error) {
     console.error('Create collection error:', error);
+    // Check for unique constraint violation in the cause property
+    if (error && typeof error === 'object' && 'cause' in error) {
+      const cause = error.cause;
+      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === '23505') {
+        return { error: 'You already have a collection with this name' };
+      }
+    }
     return { error: 'Failed to create collection' };
   }
 }
@@ -103,8 +120,12 @@ export async function addVerseToCollectionAction(
     return { data: verse };
   } catch (error) {
     console.error('Add verse error:', error);
-    if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
-      return { error: 'Verse already in collection' };
+    // Check for unique constraint violation in the cause property
+    if (error && typeof error === 'object' && 'cause' in error) {
+      const cause = error.cause;
+      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === '23505') {
+        return { error: 'Verse already in collection' };
+      }
     }
     return { error: 'Failed to add verse' };
   }
@@ -190,12 +211,22 @@ export async function updateCollectionAction(
     return { error: 'Not authenticated' };
   }
 
+  // Validate collection name
+  const trimmedName = name.trim();
+  if (!trimmedName || trimmedName.length < 2) {
+    return { error: 'Collection name must be at least 2 characters' };
+  }
+
+  if (trimmedName.length > 100) {
+    return { error: 'Collection name is too long (max 100 characters)' };
+  }
+
   try {
     const [collection] = await db
       .update(collections)
       .set({
-        name,
-        description: description || null,
+        name: trimmedName,
+        description: description?.trim() || null,
         updatedAt: new Date(),
       })
       .where(and(
@@ -204,11 +235,22 @@ export async function updateCollectionAction(
       ))
       .returning();
 
+    if (!collection) {
+      return { error: 'Collection not found' };
+    }
+
     revalidatePath('/collections');
     revalidatePath(`/collections/${collectionId}`);
     return { data: collection };
   } catch (error) {
     console.error('Update collection error:', error);
+    // Check for unique constraint violation in the cause property
+    if (error && typeof error === 'object' && 'cause' in error) {
+      const cause = error.cause;
+      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === '23505') {
+        return { error: 'You already have a collection with this name' };
+      }
+    }
     return { error: 'Failed to update collection' };
   }
 }
