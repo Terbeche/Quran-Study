@@ -24,8 +24,6 @@ export default async function CollectionsPage() {
       name: collections.name,
       description: collections.description,
       isPublic: collections.isPublic,
-      createdAt: collections.createdAt,
-      updatedAt: collections.updatedAt,
       verseCount: sql<number>`cast(count(${collectionVerses.id}) as integer)`,
     })
     .from(collections)
