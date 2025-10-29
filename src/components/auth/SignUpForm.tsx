@@ -39,8 +39,8 @@ export function SignUpForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-          <p className="text-red-600 text-sm">{error}</p>
+        <div className="rounded-lg p-3" style={{ background: 'var(--error-bg)', border: '1px solid var(--error-border)' }}>
+          <p className="text-sm" style={{ color: 'var(--error-text)' }}>{error}</p>
         </div>
       )}
 

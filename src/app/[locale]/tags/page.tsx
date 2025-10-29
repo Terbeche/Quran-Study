@@ -37,7 +37,7 @@ export default async function MyTagsPage() {
       <h1 className="section-title">{t('title')}</h1>
 
       {Object.keys(groupedTags).length === 0 && (
-        <p style={{ color: 'rgba(0,0,0,0.6)' }}>
+        <p style={{ color: 'var(--text-muted)' }}>
           {t('noTags')}. {t('createFirst')}
         </p>
       )}
@@ -54,7 +54,7 @@ export default async function MyTagsPage() {
                 #{tagText}
               </Link>
               {' '}
-              <span className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
+              <span className="text-sm" style={{ color: 'var(--text-muted)' }}>
                 ({tagList.length === 1 
                   ? t('verseCountSingular') 
                   : t('verseCount', { count: tagList.length })})
@@ -74,7 +74,7 @@ export default async function MyTagsPage() {
                 <div
                   key={tag.id}
                   className="flex items-center justify-between p-3 rounded transition-all"
-                  style={{ background: 'rgba(16, 185, 129, 0.05)' }}
+                  style={{ background: 'var(--input-bg)' }}
                 >
                   <Link
                     href={`/surah/${chapterId}#verse-${verseNumber}`}

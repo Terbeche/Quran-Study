@@ -53,7 +53,7 @@ export default async function CommunityTagsPage() {
 
       {publicTags.length === 0 && (
         <div className="text-center py-12 card">
-          <p style={{ color: 'rgba(0,0,0,0.5)' }}>{t('noTags')}</p>
+          <p style={{ color: 'var(--text-muted)' }}>{t('noTags')}</p>
           <Link
             href="/tags"
             className="mt-4 inline-block btn-primary"
@@ -80,7 +80,7 @@ export default async function CommunityTagsPage() {
                   </Link>
                 </h2>
                 <div className="flex items-center gap-4">
-                  <div className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
+                  <div className="text-sm" style={{ color: 'var(--text-muted)' }}>
                     <span className="font-medium">{tagList.length}</span> {t('verse', { count: tagList.length })} · <span className="font-medium">{totalVotes}</span> {t('totalVotes')}
                   </div>
                   <Link
@@ -99,7 +99,7 @@ export default async function CommunityTagsPage() {
                     <div
                       key={tag.id}
                       className="flex items-center justify-between p-3 rounded transition-colors"
-                      style={{ background: 'rgba(16, 185, 129, 0.05)' }}
+                      style={{ background: 'var(--input-bg)' }}
                     >
                       <Link
                         href={`/surah/${chapterId}#verse-${verseNumber}`}

@@ -43,14 +43,15 @@ export function VerseCollectionBadgesClient({ verseKey, initialCollections }: Ve
   }
 
   return (
-    <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(16, 185, 129, 0.1)' }}>
+    <div className="mt-3 pt-3" style={{ borderTop: '1px solid var(--card-border)' }}>
       <div className="flex items-start gap-2">
-        <span className="text-xs font-medium mt-1" style={{ color: 'rgba(0,0,0,0.5)' }}>{t('inCollections')}:</span>
+        <span className="text-xs font-medium mt-1" style={{ color: 'var(--text-muted)' }}>{t('inCollections')}:</span>
         <div className="flex flex-wrap gap-2">
           {collections.map((collection) => (
             <div
               key={collection.id}
-              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium"
+              style={{ background: 'rgba(147, 51, 234, 0.1)', color: 'var(--primary-green)' }}
             >
               <Link
                 href={`/collections/${collection.id}`}

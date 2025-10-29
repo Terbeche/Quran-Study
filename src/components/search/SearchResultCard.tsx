@@ -32,7 +32,7 @@ export function SearchResultCard({ verse }: SearchResultCardProps) {
             <div
               key={translation.id}
               className="text-sm leading-relaxed"
-              style={{ color: 'rgba(0,0,0,0.7)' }}
+              style={{ color: 'var(--text-secondary)' }}
               // Render <em> tags for highlighted text
               dangerouslySetInnerHTML={{ __html: translation.text }}
             />

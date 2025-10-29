@@ -40,7 +40,7 @@ export async function VerseCard({ verse, audioUrl, showTags = true, userCollecti
   return (
     <div id={`verse-${verse.verse_number}`} className="card card-hover animate-fade-in">
       <div className="flex justify-between items-center mb-2">
-        <div className="text-sm font-medium" style={{ color: 'rgba(0,0,0,0.6)' }}>
+        <div className="text-sm font-medium" style={{ color: 'var(--text-muted)' }}>
           {verse.verse_key}
         </div>
         

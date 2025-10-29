@@ -42,7 +42,7 @@ export default async function CollectionsPage() {
       </div>
 
       {userCollections.length === 0 && (
-        <p style={{ color: 'rgba(0,0,0,0.5)' }}>
+        <p style={{ color: 'var(--text-muted)' }}>
           {t('noCollections')}. {t('createFirst')}
         </p>
       )}
@@ -76,7 +76,7 @@ export default async function CollectionsPage() {
               <p className="mb-3" style={{ color: 'var(--foreground)' }}>{collection.description}</p>
             )}
             
-            <div className="flex items-center gap-4 text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
+            <div className="flex items-center gap-4 text-sm" style={{ color: 'var(--text-muted)' }}>
               <span>
                 {collection.verseCount === 1 
                   ? t('verseCountSingular') 

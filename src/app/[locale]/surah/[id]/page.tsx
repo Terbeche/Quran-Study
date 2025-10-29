@@ -97,8 +97,8 @@ export default async function SurahPage({ params }: SurahPageProps) {
   if (error || !chapter) {
     return (
       <div className="container mx-auto px-4 py-8 animate-fade-in">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-600">{t('failedToLoad')}</p>
+        <div className="rounded-lg p-4" style={{ background: 'var(--error-bg)', border: '1px solid var(--error-border)' }}>
+          <p style={{ color: 'var(--error-text)' }}>{t('failedToLoad')}</p>
         </div>
       </div>
     );
@@ -155,7 +155,7 @@ export default async function SurahPage({ params }: SurahPageProps) {
 
       {verses.length === 0 && (
         <div className="text-center py-12 card">
-          <p style={{ color: 'rgba(0,0,0,0.5)' }}>{t('noVerses')}</p>
+          <p style={{ color: 'var(--text-muted)' }}>{t('noVerses')}</p>
         </div>
       )}
     </div>

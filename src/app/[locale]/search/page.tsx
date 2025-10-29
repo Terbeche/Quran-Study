@@ -53,7 +53,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   </div>
                   <div className="text-2xl font-arabic text-accent">{chapter.name_arabic}</div>
                 </div>
-                <div className="text-xs flex gap-4" style={{ color: 'rgba(0,0,0,0.5)' }}>
+                <div className="text-xs flex gap-4" style={{ color: 'var(--text-muted)' }}>
                   <span>{tHome('chapter.verses', { count: chapter.verses_count })}</span>
                   <span className="capitalize">{chapter.revelation_place}</span>
                 </div>

@@ -93,7 +93,7 @@ export default async function CollectionDetailPage({
 
       {verses.length === 0 && (
         <div className="text-center py-12 card">
-          <p className="mb-4" style={{ color: 'rgba(0,0,0,0.5)' }}>
+          <p className="mb-4" style={{ color: 'var(--text-muted)' }}>
             {t('noVersesInCollection')}
           </p>
           <Link
@@ -112,7 +112,7 @@ export default async function CollectionDetailPage({
               <>
                 <VerseCard verse={verse} showTags={false} />
                 {notes && (
-                  <div className="mt-2 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
+                  <div className="mt-2 p-3 border-l-4 rounded" style={{ background: 'var(--input-bg)', borderColor: 'var(--primary-green)' }}>
                     <p className="text-sm" style={{ color: 'var(--foreground)' }}>📝 {notes}</p>
                   </div>
                 )}
@@ -124,8 +124,8 @@ export default async function CollectionDetailPage({
                 </div>
               </>
             ) : (
-              <div className="p-4 bg-red-50 border border-red-200 rounded">
-                <p className="text-red-600">
+              <div className="p-4 border rounded" style={{ background: 'var(--error-bg)', borderColor: 'var(--error-border)' }}>
+                <p style={{ color: 'var(--error-text)' }}>
                   {t('failedToLoadVerse', { key: verseKey })}
                 </p>
               </div>

@@ -52,7 +52,7 @@ export default function CreateCollectionButton() {
       </button>
 
       {isOpen && typeof document !== 'undefined' && createPortal(
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]" style={{ background: 'var(--modal-overlay)' }}>
           <div className="card glass max-w-md w-full relative z-10">
             <h2 className="text-2xl font-bold mb-4 text-accent">{t('createDialog.title')}</h2>
 
@@ -88,14 +88,13 @@ export default function CreateCollectionButton() {
                 />
               </div>
 
-              {error && <p className="mb-4 text-sm text-red-600">{error}</p>}
+              {error && <p className="mb-4 text-sm" style={{ color: 'var(--error-text)' }}>{error}</p>}
 
               <div className="flex gap-2 justify-end">
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="px-4 py-2 border rounded-md transition-colors text-accent"
-                  style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}
+                  className="btn-ghost"
                 >
                   {tCommon('cancel')}
                 </button>

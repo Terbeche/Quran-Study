@@ -2,6 +2,7 @@ import { auth } from '@/auth';
 import { SignOutButton } from './SignOutButton';
 import { Link } from '@/i18n/routing';
 import LanguageSwitcher from './LanguageSwitcher';
+import ThemeSwitcher from './ThemeSwitcher';
 import { getTranslations } from 'next-intl/server';
 
 export async function Header() {
@@ -43,6 +44,7 @@ export async function Header() {
                     {session.user.name || session.user.email}
                   </span>
                   <SignOutButton />
+                  <ThemeSwitcher />
                   <LanguageSwitcher />
                 </div>
               </>
@@ -63,6 +65,7 @@ export async function Header() {
                 >
                   {t('signUp')}
                 </Link>
+                <ThemeSwitcher />
                 <LanguageSwitcher />
               </>
             )}

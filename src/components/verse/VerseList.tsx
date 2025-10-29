@@ -12,7 +12,7 @@ export function VerseList({ verses }: VerseListProps) {
   if (!verses || verses.length === 0) {
     return (
       <div className="text-center py-12 card">
-        <p style={{ color: 'rgba(0,0,0,0.5)' }}>{t('noVerses')}</p>
+        <p style={{ color: 'var(--text-muted)' }}>{t('noVerses')}</p>
       </div>
     );
   }

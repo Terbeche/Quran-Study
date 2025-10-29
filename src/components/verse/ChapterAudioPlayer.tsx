@@ -238,8 +238,8 @@ export function ChapterAudioPlayer({
             <span className="text-white text-2xl">🎵</span>
           </div>
           <div>
-            <h3 className="font-bold text-xl text-gray-900">{t('title')}</h3>
-            <p className="text-sm text-emerald-600 font-medium">
+            <h3 className="font-bold text-xl" style={{ color: 'var(--foreground)' }}>{t('title')}</h3>
+            <p className="text-sm font-medium" style={{ color: 'var(--primary-green)' }}>
               {t('currentVerse', { current: currentVerse, total: totalVerses })}
             </p>
           </div>

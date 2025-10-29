@@ -1,15 +1,28 @@
 'use client';
 
 import { signOut } from 'next-auth/react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 export function SignOutButton() {
   const t = useTranslations('header');
+  const locale = useLocale();
+  
+  const handleSignOut = async () => {
+    await signOut({ 
+      callbackUrl: `/${locale}`,
+      redirect: true 
+    });
+  };
   
   return (
     <button
-      onClick={() => signOut()}
-      className="text-sm px-3 py-1.5 rounded-lg transition-all duration-300 bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 font-medium"
+      onClick={handleSignOut}
+      className="text-sm px-3 py-1.5 rounded-lg transition-all duration-300 font-medium hover:scale-105 hover:shadow-md"
+      style={{ 
+        background: 'rgba(239, 68, 68, 0.1)', 
+        color: '#ef4444',
+        border: '1px solid rgba(239, 68, 68, 0.2)'
+      }}
     >
       {t('signOut')}
     </button>

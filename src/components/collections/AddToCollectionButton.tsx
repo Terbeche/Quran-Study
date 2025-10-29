@@ -16,6 +16,7 @@ export default function AddToCollectionButton({
   collections,
 }: AddToCollectionButtonProps) {
   const t = useTranslations('collections');
+  const tCommon = useTranslations('common');
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
@@ -60,12 +61,12 @@ export default function AddToCollectionButton({
       </button>
 
       {isOpen && typeof document !== 'undefined' && createPortal(
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
+        <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]" style={{ background: 'var(--modal-overlay)' }}>
           <div className="card glass max-w-md w-full max-h-96 overflow-y-auto relative z-10">
             <h2 className="text-xl font-bold mb-4 text-accent">{t('addToCollection')}</h2>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-50 text-red-600 rounded text-sm">
+              <div className="mb-4 p-3 rounded text-sm" style={{ background: 'var(--error-bg)', color: 'var(--error-text)' }}>
                 {error}
               </div>
             )}
@@ -80,20 +81,23 @@ export default function AddToCollectionButton({
                     disabled={isPending || isAdded}
                     className={`w-full text-left p-3 border rounded transition-all cursor-pointer ${
                       isAdded 
-                        ? 'bg-green-50 border-green-300 cursor-not-allowed' 
-                        : 'hover:bg-emerald-50 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed'
+                        ? 'cursor-not-allowed' 
+                        : 'disabled:opacity-50 disabled:cursor-not-allowed'
                     }`}
-                    style={isAdded ? {} : { borderColor: 'rgba(16, 185, 129, 0.2)' }}
+                    style={isAdded 
+                      ? { background: 'var(--success-bg)', borderColor: 'var(--success-border)' } 
+                      : { borderColor: 'var(--card-border)', background: 'var(--card-bg)' }
+                    }
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex-1">
                         <div className="font-medium text-accent">{collection.name}</div>
                         {collection.description && (
-                          <div className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>{collection.description}</div>
+                          <div className="text-sm" style={{ color: 'var(--text-muted)' }}>{collection.description}</div>
                         )}
                       </div>
                       {isAdded && (
-                        <span className="text-green-600 ml-2">{t('added')}</span>
+                        <span className="ml-2" style={{ color: 'var(--success-text)' }}>{t('added')}</span>
                       )}
                     </div>
                   </button>
@@ -106,10 +110,18 @@ export default function AddToCollectionButton({
                 setIsOpen(false);
                 setError('');
               }}
-              className="mt-4 w-full px-4 py-2 border rounded transition-all text-accent cursor-pointer hover:bg-emerald-50 hover:shadow-sm"
-              style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}
+              className="mt-4 w-full px-4 py-2 border rounded transition-all duration-200 text-accent cursor-pointer hover:shadow-md"
+              style={{ borderColor: 'var(--primary-green)', background: 'transparent' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--primary-green)';
+                e.currentTarget.style.color = '#f1f5f9';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = 'var(--primary-green)';
+              }}
             >
-              {t('cancel')}
+              {tCommon('cancel')}
             </button>
           </div>
         </div>,

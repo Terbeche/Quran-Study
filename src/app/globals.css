@@ -1,26 +1,87 @@
 @import "tailwindcss";
 
 :root {
+  /* Light theme colors */
   --background: #f0fdf4;
+  --background-gradient-start: #f0fdf4;
+  --background-gradient-end: #dcfce7;
   --foreground: #171717;
   --primary-green: #10b981;
   --light-green: #d1fae5;
   --dark-green: #059669;
   --accent-green: #34d399;
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: rgba(16, 185, 129, 0.1);
+  --card-hover-shadow: rgba(16, 185, 129, 0.15);
+  --text-muted: rgba(0, 0, 0, 0.6);
+  --text-secondary: rgba(0, 0, 0, 0.7);
+  --input-bg: white;
+  --input-border: rgba(16, 185, 129, 0.2);
+  --header-bg: rgba(255, 255, 255, 0.9);
+  --header-border: rgba(4, 120, 87, 0.06);
+  --modal-overlay: rgba(0, 0, 0, 0.3);
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --error-bg: #fef2f2;
+  --error-border: #fecaca;
+  --error-text: #dc2626;
+  --success-bg: #f0fdf4;
+  --success-border: #bbf7d0;
+  --success-text: #16a34a;
+  --feature-box-bg: rgba(255, 255, 255, 0.7);
+  --feature-box-hover-bg: rgba(255, 255, 255, 0.9);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+.dark {
+  /* Dark theme colors with proper contrast */
+  --background: #0a0f1a;
+  --background-gradient-start: #0a0f1a;
+  --background-gradient-end: #1a1f2e;
+  --foreground: #f1f5f9;
+  --primary-green: #34d399;
+  --light-green: #064e3b;
+  --dark-green: #10b981;
+  --accent-green: #6ee7b7;
+  --card-bg: rgba(30, 41, 59, 0.95);
+  --card-border: rgba(52, 211, 153, 0.2);
+  --card-hover-shadow: rgba(52, 211, 153, 0.25);
+  --text-muted: rgba(255, 255, 255, 0.6);
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --input-bg: #334155;
+  --input-border: #475569;
+  --header-bg: rgba(15, 23, 42, 0.9);
+  --header-border: rgba(52, 211, 153, 0.1);
+  --modal-overlay: rgba(0, 0, 0, 0.7);
+  --glass-bg: rgba(30, 41, 59, 0.8);
+  --glass-border: rgba(52, 211, 153, 0.2);
+  --error-bg: #450a0a;
+  --error-border: #7f1d1d;
+  --error-text: #fca5a5;
+  --success-bg: #022c22;
+  --success-border: #064e3b;
+  --success-text: #6ee7b7;
+  --feature-box-bg: rgba(30, 41, 59, 0.7);
+  --feature-box-hover-bg: rgba(30, 41, 59, 0.9);
+  
+  /* Dark theme system settings */
+  color-scheme: dark;
 }
 
 body {
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  background: linear-gradient(135deg, var(--background-gradient-start) 0%, var(--background-gradient-end) 100%);
   background-attachment: fixed;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+/* Ensure all main containers are transparent */
+main,
+.container,
+div[class*="max-w-"],
+div[class*="mx-auto"] {
+  background: transparent !important;
 }
 
 .font-arabic {
@@ -92,9 +153,9 @@ body {
 
 /* Glass morphism effect */
 .glass {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--glass-bg);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--glass-border);
 }
 
 /* Audio wave animation */
@@ -104,9 +165,9 @@ body {
 
 /* Theme utilities built on CSS variables */
 .header {
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--header-bg);
   backdrop-filter: blur(8px);
-  border-bottom: 1px solid rgba(4, 120, 87, 0.06);
+  border-bottom: 1px solid var(--header-border);
 }
 
 .btn-primary {
@@ -141,8 +202,8 @@ body {
 
 /* Cards */
 .card {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(16, 185, 129, 0.1);
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 1rem;
   padding: 1.5rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -150,17 +211,18 @@ body {
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 24px -8px rgba(16, 185, 129, 0.15);
-  border-color: rgba(16, 185, 129, 0.2);
+  box-shadow: 0 12px 24px -8px var(--card-hover-shadow);
+  border-color: var(--primary-green);
 }
 
 /* Form inputs */
 .input {
   width: 100%;
   padding: 0.75rem 1rem;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  border: 1px solid var(--input-border);
   border-radius: 0.75rem;
-  background: white;
+  background: var(--input-bg);
+  color: var(--foreground);
   transition: all 0.2s ease;
 }
 
@@ -187,7 +249,6 @@ body {
 
 .link:hover {
   color: var(--dark-green);
-  text-decoration: underline;
 }
 
 /* Badge */
@@ -207,20 +268,22 @@ body {
 .feature-box {
   text-align: center;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.7);
+  background: var(--feature-box-bg);
   border-radius: 1rem;
-  border: 1px solid rgba(16, 185, 129, 0.1);
+  border: 1px solid var(--card-border);
   transition: all 0.3s ease;
 }
 
 .feature-box:hover {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(16, 185, 129, 0.3);
+  background: var(--feature-box-hover-bg);
+  border-color: var(--primary-green);
   transform: translateY(-4px);
 }
 
 /* Smooth scroll */
 html {
+  background: var(--background);
+  transition: background 0.3s ease;
   scroll-behavior: smooth;
 }
 

@@ -66,8 +66,12 @@ export default async function Home() {
           {!session?.user && (
             <Link
               href="/auth/signin"
-              className="px-6 py-3 border-2 rounded-xl font-medium transition-all duration-300 hover:bg-emerald-50"
-              style={{ borderColor: 'var(--primary-green)', color: 'var(--primary-green)' }}
+              className="px-6 py-3 border-2 rounded-xl font-medium transition-all duration-300"
+              style={{ 
+                borderColor: 'var(--primary-green)', 
+                color: 'var(--primary-green)',
+                background: 'transparent'
+              }}
             >
               {t('signInToTag')}
             </Link>
@@ -109,7 +113,7 @@ export default async function Home() {
                 </div>
                 <div className="text-2xl font-arabic" style={{ color: 'var(--dark-green)' }}>{chapter.name_arabic}</div>
               </div>
-              <div className="text-xs flex gap-4" style={{ color: 'rgba(0,0,0,0.5)' }}>
+              <div className="text-xs flex gap-4" style={{ color: 'var(--text-muted)' }}>
                 <span>{tChapter('verses', { count: chapter.verses_count })}</span>
                 <span className="capitalize">{chapter.revelation_place}</span>
               </div>
@@ -119,7 +123,7 @@ export default async function Home() {
 
         {chapters.length === 0 && (
           <div className="text-center py-12 card">
-            <p style={{ color: 'rgba(0,0,0,0.5)' }}>{t('failedToLoad')}</p>
+            <p style={{ color: 'var(--text-muted)' }}>{t('failedToLoad')}</p>
           </div>
         )}
       </div>

@@ -94,7 +94,7 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
 
   if (!userId) {
     return (
-      <div className="mt-4 text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
+      <div className="mt-4 text-sm" style={{ color: 'var(--text-muted)' }}>
         {t('signInToTag')}
       </div>
     );
@@ -122,15 +122,15 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
         </div>
       </form>
 
-      {error && <p className="mt-2 text-sm text-red-600">{error}</p>}
+      {error && <p className="mt-2 text-sm" style={{ color: 'var(--error-text)' }}>{error}</p>}
 
       {tags.length > 0 && (
         <div className="mt-3 flex flex-wrap gap-2">
           {tags.map((tag) => (
             <div
               key={tag.id}
-              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium bg-gray-100"
-              style={{ color: 'var(--foreground)' }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium"
+              style={{ background: 'var(--input-bg)', color: 'var(--foreground)' }}
             >
               <span>#{tag.tagText}</span>
               

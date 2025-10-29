@@ -55,7 +55,7 @@ export function SearchResults({ query, searchType }: SearchResultsProps) {
             borderTopColor: 'transparent'
           }}
         />
-        <p style={{ color: 'rgba(0,0,0,0.6)' }}>
+        <p style={{ color: 'var(--text-muted)' }}>
           {t('searching')}
         </p>
       </div>
@@ -64,11 +64,11 @@ export function SearchResults({ query, searchType }: SearchResultsProps) {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-4">
-        <p className="text-red-600">
+      <div className="rounded-lg p-4 mt-4" style={{ background: 'var(--error-bg)', border: '1px solid var(--error-border)' }}>
+        <p style={{ color: 'var(--error-text)' }}>
           {t('errorLoading')}
         </p>
-        <p className="text-sm text-red-500 mt-2">{error}</p>
+        <p className="text-sm mt-2" style={{ color: 'var(--error-text)', opacity: 0.8 }}>{error}</p>
       </div>
     );
   }
@@ -76,7 +76,7 @@ export function SearchResults({ query, searchType }: SearchResultsProps) {
   if (verses.length === 0) {
     return (
       <div className="card text-center py-8">
-        <p style={{ color: 'rgba(0,0,0,0.6)' }}>
+        <p style={{ color: 'var(--text-muted)' }}>
           {t('noResults', { query })}
           <br />
           {t('tryDifferent')}
@@ -92,7 +92,7 @@ export function SearchResults({ query, searchType }: SearchResultsProps) {
 
   return (
     <>
-      <div className="mb-4 text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>
+      <div className="mb-4 text-sm" style={{ color: 'var(--text-muted)' }}>
         {t('foundVerses', { count: verses.length })}
         {searchType === 'tag' && ` ${t('taggedWith', { query })}`}
       </div>
