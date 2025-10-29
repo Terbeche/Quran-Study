@@ -70,14 +70,17 @@ export default async function SurahPage({ params }: SurahPageProps) {
   let error = null;
 
   try {
-    const [chapterData, versesData, chapterAudioData, verseAudioData] = await Promise.all([
-      getChapter(chapterId),
-      getVersesByChapter(chapterId, 1, 50),
+    // First fetch chapter info to get verse count
+    const chapterData = await getChapter(chapterId);
+    chapter = chapterData.chapter;
+    
+    // Fetch all verses and audio in parallel
+    const [versesData, chapterAudioData, verseAudioData] = await Promise.all([
+      getVersesByChapter(chapterId, 1, chapter.verses_count), // Fetch ALL verses
       getChapterAudio(7, chapterId, true), // Recitation ID 7 = Alafasy, segments=true for timestamps
-      getVerseAudioFiles(7, chapterId, 1, 50)
+      getVerseAudioFiles(7, chapterId, 1, chapter.verses_count) // Fetch ALL verse audio files
     ]);
     
-    chapter = chapterData.chapter;
     verses = versesData.verses || [];
 
     if (chapterAudioData.audio_file?.audio_url) {
