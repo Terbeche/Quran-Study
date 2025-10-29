@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { ChapterAudioPlayer } from './ChapterAudioPlayer';
 import { getRecitationsAction, getChapterAudioAction } from '@/lib/actions/audio-actions';
 
@@ -27,6 +28,7 @@ export function ReciterAudioPlayer({
   initialAudioUrl, 
   initialTimestamps 
 }: ReciterAudioPlayerProps) {
+  const t = useTranslations('chapter.audioPlayer');
   const [reciters, setReciters] = useState<Recitation[]>([]);
   const [currentReciterId, setCurrentReciterId] = useState(7); // Default: Alafasy
   const [audioUrl, setAudioUrl] = useState(initialAudioUrl);
@@ -97,7 +99,7 @@ export function ReciterAudioPlayer({
     <div className="relative">
       {isLoading && (
         <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10 rounded-lg">
-          <div className="text-blue-600 font-medium">Loading reciter...</div>
+          <div className="text-blue-600 font-medium">{t('loadingReciter')}</div>
         </div>
       )}
       

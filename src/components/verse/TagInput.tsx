@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useTransition, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import { createTagAction, deleteTagAction } from '@/actions/tag-actions';
-import { normalizeTag, isValidTag } from '@/lib/utils/tag-normalizer';
-import TagToggleButton from '@/components/tags/TagToggleButton';
 import type { Tag } from '@/types/tag';
+import TagToggleButton from '@/components/tags/TagToggleButton';
+import { isValidTag, normalizeTag } from '@/lib/utils/tag-normalizer';
 
 interface TagInputProps {
   readonly verseKey: string;
@@ -13,6 +14,7 @@ interface TagInputProps {
 }
 
 export default function TagInput({ verseKey, initialTags, userId }: TagInputProps) {
+  const t = useTranslations('verse');
   const [isPending, startTransition] = useTransition();
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
@@ -23,12 +25,12 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
     e.preventDefault();
 
     if (!userId) {
-      setError('Please sign in to add tags');
+      setError(t('pleaseSignIn'));
       return;
     }
 
     if (!isValidTag(input)) {
-      setError('Tag must be 2-50 characters');
+      setError(t('tagValidation'));
       return;
     }
 
@@ -36,7 +38,7 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
 
     // Check if tag already exists locally
     if (tags.some(tag => tag.tagText.toLowerCase() === normalized.toLowerCase())) {
-      setError('You already have this tag on this verse');
+      setError(t('tagAlreadyExists'));
       return;
     }
 
@@ -93,7 +95,7 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
   if (!userId) {
     return (
       <div className="mt-4 text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
-        Sign in to add personal tags
+        {t('signInToTag')}
       </div>
     );
   }

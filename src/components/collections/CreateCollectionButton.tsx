@@ -3,8 +3,11 @@
 import { useState, useTransition } from 'react';
 import { createPortal } from 'react-dom';
 import { createCollectionAction } from '@/actions/collection-actions';
+import { useTranslations } from 'next-intl';
 
 export default function CreateCollectionButton() {
+  const t = useTranslations('collections');
+  const tCommon = useTranslations('common');
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -45,18 +48,18 @@ export default function CreateCollectionButton() {
         onClick={handleOpen}
         className="btn-primary"
       >
-        Create Collection
+        {t('createNew')}
       </button>
 
       {isOpen && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
           <div className="card glass max-w-md w-full relative z-10">
-            <h2 className="text-2xl font-bold mb-4 text-accent">Create New Collection</h2>
+            <h2 className="text-2xl font-bold mb-4 text-accent">{t('createDialog.title')}</h2>
 
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label htmlFor="collection-name" className="block text-sm font-medium mb-2 text-accent">
-                  Collection Name *
+                  {t('createDialog.nameLabel')} *
                 </label>
                 <input
                   id="collection-name"
@@ -64,6 +67,7 @@ export default function CreateCollectionButton() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className="input"
+                  placeholder={t('createDialog.namePlaceholder')}
                   maxLength={100}
                   autoFocus
                 />
@@ -71,13 +75,14 @@ export default function CreateCollectionButton() {
 
               <div className="mb-4">
                 <label htmlFor="collection-description" className="block text-sm font-medium mb-2 text-accent">
-                  Description (optional)
+                  {t('createDialog.descriptionLabel')}
                 </label>
                 <textarea
                   id="collection-description"
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   className="input"
+                  placeholder={t('createDialog.descriptionPlaceholder')}
                   rows={3}
                   maxLength={500}
                 />
@@ -92,14 +97,14 @@ export default function CreateCollectionButton() {
                   className="px-4 py-2 border rounded-md transition-colors text-accent"
                   style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}
                 >
-                  Cancel
+                  {tCommon('cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
                   className="btn-primary disabled:opacity-50"
                 >
-                  {isPending ? 'Creating...' : 'Create'}
+                  {isPending ? `${t('createDialog.submit')}...` : t('createDialog.submit')}
                 </button>
               </div>
             </form>

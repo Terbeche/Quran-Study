@@ -2,6 +2,7 @@
 
 import { useState, useTransition, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslations } from 'next-intl';
 import { addVerseToCollectionAction, getVerseCollectionsAction } from '@/actions/collection-actions';
 import type { Collection } from '@/types/collection';
 
@@ -14,6 +15,7 @@ export default function AddToCollectionButton({
   verseKey,
   collections,
 }: AddToCollectionButtonProps) {
+  const t = useTranslations('collections');
   const [isOpen, setIsOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState('');
@@ -54,13 +56,13 @@ export default function AddToCollectionButton({
         onClick={() => setIsOpen(true)}
         className="text-sm link cursor-pointer hover:underline transition-all"
       >
-        + Add to Collection
+        {t('addToCollection')}
       </button>
 
       {isOpen && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
           <div className="card glass max-w-md w-full max-h-96 overflow-y-auto relative z-10">
-            <h2 className="text-xl font-bold mb-4 text-accent">Add to Collection</h2>
+            <h2 className="text-xl font-bold mb-4 text-accent">{t('addToCollection')}</h2>
 
             {error && (
               <div className="mb-4 p-3 bg-red-50 text-red-600 rounded text-sm">
@@ -91,7 +93,7 @@ export default function AddToCollectionButton({
                         )}
                       </div>
                       {isAdded && (
-                        <span className="text-green-600 ml-2">✓ Added</span>
+                        <span className="text-green-600 ml-2">{t('added')}</span>
                       )}
                     </div>
                   </button>
@@ -107,7 +109,7 @@ export default function AddToCollectionButton({
               className="mt-4 w-full px-4 py-2 border rounded transition-all text-accent cursor-pointer hover:bg-emerald-50 hover:shadow-sm"
               style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}
             >
-              Cancel
+              {t('cancel')}
             </button>
           </div>
         </div>,

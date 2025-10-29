@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from 'react';
 import { createPortal } from 'react-dom';
+import { useTranslations } from 'next-intl';
 import { updateCollectionAction } from '@/actions/collection-actions';
 
 interface EditCollectionButtonProps {
@@ -15,6 +16,8 @@ export default function EditCollectionButton({
   currentName,
   currentDescription,
 }: EditCollectionButtonProps) {
+  const t = useTranslations('collections.editDialog');
+  const tCommon = useTranslations('common');
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState(currentName);
   const [description, setDescription] = useState(currentDescription || '');
@@ -25,7 +28,7 @@ export default function EditCollectionButton({
     e.preventDefault();
 
     if (!name.trim()) {
-      setError('Collection name is required');
+      setError(t('nameRequired'));
       return;
     }
 
@@ -46,20 +49,20 @@ export default function EditCollectionButton({
         onClick={() => setIsOpen(true)}
         className="px-3 py-1 text-xs transition-all hover:bg-emerald-50 rounded cursor-pointer hover:shadow-sm"
         style={{ color: 'var(--primary-green)' }}
-        title="Edit collection"
+        title={t('title')}
       >
-        Edit
+        {tCommon('edit')}
       </button>
 
       {isOpen && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center p-4 z-[9999]">
           <div className="card glass max-w-md w-full relative z-10">
-            <h2 className="text-2xl font-bold mb-4 text-accent">Edit Collection</h2>
+            <h2 className="text-2xl font-bold mb-4 text-accent">{t('title')}</h2>
 
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label htmlFor="edit-collection-name" className="block text-sm font-medium mb-2 text-accent">
-                  Collection Name *
+                  {t('nameLabel')} *
                 </label>
                 <input
                   id="edit-collection-name"
@@ -74,7 +77,7 @@ export default function EditCollectionButton({
 
               <div className="mb-4">
                 <label htmlFor="edit-collection-description" className="block text-sm font-medium mb-2 text-accent">
-                  Description (optional)
+                  {t('descriptionLabel')}
                 </label>
                 <textarea
                   id="edit-collection-description"
@@ -100,14 +103,14 @@ export default function EditCollectionButton({
                   className="px-4 py-2 border rounded-md transition-all text-accent cursor-pointer hover:bg-emerald-50 hover:shadow-sm"
                   style={{ borderColor: 'rgba(16, 185, 129, 0.3)' }}
                 >
-                  Cancel
+                  {tCommon('cancel')}
                 </button>
                 <button
                   type="submit"
                   disabled={isPending}
                   className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isPending ? 'Saving...' : 'Save Changes'}
+                  {isPending ? t('saving') : t('saveChanges')}
                 </button>
               </div>
             </form>

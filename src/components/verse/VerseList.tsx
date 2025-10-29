@@ -1,4 +1,5 @@
 import { VerseCard } from './VerseCard';
+import { useTranslations } from 'next-intl';
 import type { Verse } from '@/types/verse';
 
 interface VerseListProps {
@@ -6,10 +7,12 @@ interface VerseListProps {
 }
 
 export function VerseList({ verses }: VerseListProps) {
+  const t = useTranslations('verse');
+  
   if (!verses || verses.length === 0) {
     return (
       <div className="text-center py-12 card">
-        <p style={{ color: 'rgba(0,0,0,0.5)' }}>No verses found</p>
+        <p style={{ color: 'rgba(0,0,0,0.5)' }}>{t('noVerses')}</p>
       </div>
     );
   }

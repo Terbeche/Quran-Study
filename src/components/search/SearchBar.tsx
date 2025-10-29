@@ -1,6 +1,7 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import { useState, useTransition } from 'react';
 
 interface SearchBarProps {
@@ -9,6 +10,7 @@ interface SearchBarProps {
 }
 
 export function SearchBar({ initialQuery = '', initialSearchType = 'text' }: SearchBarProps) {
+  const t = useTranslations('search');
   const router = useRouter();
   const [query, setQuery] = useState(initialQuery);
   const [searchType, setSearchType] = useState<'text' | 'tag'>(initialSearchType);
@@ -41,7 +43,7 @@ export function SearchBar({ initialQuery = '', initialSearchType = 'text' }: Sea
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          🔍 Text Search
+          🔍 {t('textSearch')}
         </button>
         <button
           type="button"
@@ -52,7 +54,7 @@ export function SearchBar({ initialQuery = '', initialSearchType = 'text' }: Sea
               : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
           }`}
         >
-          🏷️ Tag Search
+          🏷️ {t('tagSearch')}
         </button>
       </div>
       <div className="flex gap-2">
@@ -60,7 +62,7 @@ export function SearchBar({ initialQuery = '', initialSearchType = 'text' }: Sea
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder={searchType === 'tag' ? 'Search by tag (e.g., patience, prayer)...' : 'Search Quran text...'}
+          placeholder={searchType === 'tag' ? t('tagSearchPlaceholder') : t('textSearchPlaceholder')}
           className="input flex-1"
           style={{ color: 'var(--foreground)' }}
         />
@@ -69,12 +71,12 @@ export function SearchBar({ initialQuery = '', initialSearchType = 'text' }: Sea
           disabled={isPending}
           className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isPending ? 'Searching...' : 'Search'}
+          {isPending ? t('searching') : t('search')}
         </button>
       </div>
       {searchType === 'tag' && (
         <p className="mt-2 text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>
-          💡 Searching in public community tags
+          💡 {t('communityTagsHint')}
         </p>
       )}
     </form>

@@ -1,9 +1,12 @@
-import Link from 'next/link';
 import { auth } from '@/auth';
 import { SignOutButton } from './SignOutButton';
+import { Link } from '@/i18n/routing';
+import LanguageSwitcher from './LanguageSwitcher';
+import { getTranslations } from 'next-intl/server';
 
 export async function Header() {
   const session = await auth();
+  const t = await getTranslations('header');
 
   return (
     <header className="header sticky top-0 z-50">
@@ -15,7 +18,7 @@ export async function Header() {
                 <span className="text-white text-xl font-bold">📖</span>
               </div>
               <h1 className="text-2xl font-bold text-accent">
-                Quran Study
+                {t('appName')}
               </h1>
             </div>
           </Link>
@@ -24,13 +27,13 @@ export async function Header() {
             {session?.user ? (
               <>
                 <Link href="/tags" className="text-accent font-medium transition-colors">
-                  My Tags
+                  {t('myTags')}
                 </Link>
                 <Link href="/collections" className="text-accent font-medium transition-colors">
-                  Collections
+                  {t('collections')}
                 </Link>
                 <Link href="/community-tags" className="text-accent font-medium transition-colors">
-                  Community
+                  {t('community')}
                 </Link>
                 <div className="flex items-center gap-3 pl-4 border-l" style={{ borderColor: 'rgba(4,120,87,0.06)' }}>
                   <div className="w-8 h-8 avatar-bg rounded-full flex items-center justify-center text-white text-sm font-bold">
@@ -40,25 +43,27 @@ export async function Header() {
                     {session.user.name || session.user.email}
                   </span>
                   <SignOutButton />
+                  <LanguageSwitcher />
                 </div>
               </>
             ) : (
               <>
                 <Link href="/community-tags" className="text-accent font-medium transition-colors">
-                  Community
+                  {t('community')}
                 </Link>
                 <Link 
                   href="/auth/signin" 
                   className="btn-ghost font-medium transition-colors"
                 >
-                  Sign In
+                  {t('signIn')}
                 </Link>
                 <Link 
                   href="/auth/signup" 
                   className="btn-primary font-medium"
                 >
-                  Sign Up
+                  {t('signUp')}
                 </Link>
+                <LanguageSwitcher />
               </>
             )}
           </nav>

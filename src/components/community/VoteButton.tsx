@@ -1,6 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { voteOnTagAction } from '@/actions/vote-actions';
 
 interface VoteButtonProps {
@@ -10,6 +11,7 @@ interface VoteButtonProps {
 }
 
 export default function VoteButton({ tagId, currentVotes, userVote }: VoteButtonProps) {
+  const t = useTranslations('community');
   const [isPending, startTransition] = useTransition();
 
   const handleVote = (value: 1 | -1) => {
@@ -29,8 +31,8 @@ export default function VoteButton({ tagId, currentVotes, userVote }: VoteButton
             : 'hover:bg-emerald-100'
         } disabled:opacity-50 disabled:cursor-not-allowed`}
         style={userVote === 1 ? {} : { background: 'rgba(16, 185, 129, 0.1)', color: 'var(--dark-green)' }}
-        aria-label={userVote === 1 ? 'Remove upvote' : 'Upvote'}
-        title={userVote === 1 ? 'Remove upvote' : 'Upvote'}
+        aria-label={userVote === 1 ? t('removeUpvote') : t('upvote')}
+        title={userVote === 1 ? t('removeUpvote') : t('upvote')}
       >
         ▲
       </button>
@@ -48,8 +50,8 @@ export default function VoteButton({ tagId, currentVotes, userVote }: VoteButton
             : 'hover:bg-red-100'
         } disabled:opacity-50 disabled:cursor-not-allowed`}
         style={userVote === -1 ? {} : { background: 'rgba(239, 68, 68, 0.1)', color: '#dc2626' }}
-        aria-label={userVote === -1 ? 'Remove downvote' : 'Downvote'}
-        title={userVote === -1 ? 'Remove downvote' : 'Downvote'}
+        aria-label={userVote === -1 ? t('removeDownvote') : t('downvote')}
+        title={userVote === -1 ? t('removeDownvote') : t('downvote')}
       >
         ▼
       </button>

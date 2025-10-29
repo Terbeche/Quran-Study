@@ -2,10 +2,12 @@
 
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 
 export function SignInForm() {
   const router = useRouter();
+  const t = useTranslations('auth.signIn');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -24,13 +26,13 @@ export function SignInForm() {
       });
 
       if (result?.error) {
-        setError('Invalid email or password');
+        setError(t('error'));
       } else {
         router.push('/');
         router.refresh();
       }
     } catch {
-      setError('An error occurred. Please try again.');
+      setError(t('error'));
     } finally {
       setLoading(false);
     }
@@ -46,7 +48,7 @@ export function SignInForm() {
 
       <div>
         <label htmlFor="email" className="block text-sm font-medium mb-1 text-accent">
-          Email
+          {t('emailLabel')}
         </label>
         <input
           id="email"
@@ -55,13 +57,13 @@ export function SignInForm() {
           onChange={(e) => setEmail(e.target.value)}
           required
           className="input"
-          placeholder="you@example.com"
+          placeholder={t('emailPlaceholder')}
         />
       </div>
 
       <div>
         <label htmlFor="password" className="block text-sm font-medium mb-1 text-accent">
-          Password
+          {t('passwordLabel')}
         </label>
         <input
           id="password"
@@ -70,7 +72,7 @@ export function SignInForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           className="input"
-          placeholder="••••••••"
+          placeholder={t('passwordPlaceholder')}
         />
       </div>
 
@@ -79,7 +81,7 @@ export function SignInForm() {
         disabled={loading}
         className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? 'Signing in...' : 'Sign In'}
+        {loading ? `${t('submitButton')}...` : t('submitButton')}
       </button>
     </form>
   );

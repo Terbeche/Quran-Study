@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, Amiri } from 'next/font/google';
 import "./globals.css";
-import { Header } from '@/components/layout/Header';
-import { SessionProvider } from 'next-auth/react';
 
 const inter = Inter({ subsets: ['latin'] });
 const amiri = Amiri({ 
@@ -39,14 +37,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} ${amiri.variable}`}>
-        <SessionProvider>
-          <Header />
-          <main className="min-h-screen bg-gray-50">
-            {children}
-          </main>
-        </SessionProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${inter.className} ${amiri.variable} antialiased`} suppressHydrationWarning>
+        {children}
       </body>
     </html>
   );

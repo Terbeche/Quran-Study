@@ -1,6 +1,6 @@
 import { VerseCard } from '@/components/verse/VerseCard';
 import { ReciterAudioPlayer } from '@/components/verse/ReciterAudioPlayer';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { getChapter } from '@/lib/api/chapters';
 import { getVersesByChapter } from '@/lib/api/verses';
 import { getChapterAudio, getVerseAudioFiles } from '@/lib/quran-api/client';
@@ -8,6 +8,7 @@ import { auth } from '@/auth';
 import { db } from '@/db';
 import { collections } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { getTranslations } from 'next-intl/server';
 import type { Chapter, Verse } from '@/types/verse';
 import type { Collection } from '@/types/collection';
 import type { Metadata } from 'next';
@@ -45,6 +46,7 @@ export async function generateMetadata({ params }: SurahPageProps): Promise<Meta
 export default async function SurahPage({ params }: SurahPageProps) {
   const { id } = await params;
   const chapterId = Number.parseInt(id);
+  const t = await getTranslations('chapter');
 
   // Check if user is authenticated
   const session = await auth();
@@ -96,7 +98,7 @@ export default async function SurahPage({ params }: SurahPageProps) {
     return (
       <div className="container mx-auto px-4 py-8 animate-fade-in">
         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <p className="text-red-600">Failed to load chapter. Please try again.</p>
+          <p className="text-red-600">{t('failedToLoad')}</p>
         </div>
       </div>
     );
@@ -107,7 +109,7 @@ export default async function SurahPage({ params }: SurahPageProps) {
       {/* Chapter Header */}
       <div className="mb-8">
         <Link href="/" className="link mb-4 inline-block">
-          ← Back to Home
+          ← {t('backToHome')}
         </Link>
         
         <div className="card">
@@ -122,9 +124,9 @@ export default async function SurahPage({ params }: SurahPageProps) {
           </div>
           
           <div className="flex gap-6 text-sm" style={{ color: 'var(--foreground)' }}>
-            <span>📖 {chapter.verses_count} verses</span>
-            <span className="capitalize">📍 Revelation: {chapter.revelation_place}</span>
-            <span>🔢 Chapter {chapter.id}</span>
+            <span>📖 {t('verses', { count: chapter.verses_count })}</span>
+            <span className="capitalize">📍 {t('revelationPlace', { place: t(chapter.revelation_place) })}</span>
+            <span>🔢 {t('chapterNumber', { number: chapter.id })}</span>
           </div>
         </div>
       </div>
@@ -153,7 +155,7 @@ export default async function SurahPage({ params }: SurahPageProps) {
 
       {verses.length === 0 && (
         <div className="text-center py-12 card">
-          <p style={{ color: 'rgba(0,0,0,0.5)' }}>No verses found</p>
+          <p style={{ color: 'rgba(0,0,0,0.5)' }}>{t('noVerses')}</p>
         </div>
       )}
     </div>

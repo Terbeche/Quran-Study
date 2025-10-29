@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface ChapterAudioPlayerProps {
   readonly totalVerses: number;
@@ -27,6 +28,7 @@ export function ChapterAudioPlayer({
   currentReciterId,
   onReciterChange 
 }: ChapterAudioPlayerProps) {
+  const t = useTranslations('chapter.audioPlayer');
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentVerse, setCurrentVerse] = useState(1);
   const [loopMode, setLoopMode] = useState<'off' | 'verse' | 'chapter'>('off');
@@ -236,9 +238,9 @@ export function ChapterAudioPlayer({
             <span className="text-white text-2xl">🎵</span>
           </div>
           <div>
-            <h3 className="font-bold text-xl text-gray-900">Chapter Audio</h3>
+            <h3 className="font-bold text-xl text-gray-900">{t('title')}</h3>
             <p className="text-sm text-emerald-600 font-medium">
-              Verse {currentVerse} of {totalVerses}
+              {t('currentVerse', { current: currentVerse, total: totalVerses })}
             </p>
           </div>
         </div>
@@ -261,8 +263,8 @@ export function ChapterAudioPlayer({
           onClick={handlePrevious}
           disabled={currentVerse === 1}
           className="w-12 h-12 rounded-full bg-emerald-50 hover:bg-emerald-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center text-emerald-600 hover:scale-110 disabled:hover:scale-100 cursor-pointer"
-          aria-label="Previous verse"
-          title="Previous verse (←)"
+          aria-label={t('previous')}
+          title={t('previousHint')}
         >
           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
             <path d="M8.445 14.832A1 1 0 0010 14v-2.798l5.445 3.63A1 1 0 0017 14V6a1 1 0 00-1.555-.832L10 8.798V6a1 1 0 00-1.555-.832l-6 4a1 1 0 000 1.664l6 4z" />
@@ -274,8 +276,8 @@ export function ChapterAudioPlayer({
           className={`w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-110 cursor-pointer ${
             isPlaying ? 'animate-pulse-glow' : ''
           }`}
-          aria-label={isPlaying ? 'Pause' : 'Play'}
-          title={isPlaying ? 'Pause (Space)' : 'Play (Space)'}
+          aria-label={isPlaying ? t('pause') : t('play')}
+          title={isPlaying ? t('pauseHint') : t('playHint')}
         >
           {isPlaying ? (
             <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
@@ -292,8 +294,8 @@ export function ChapterAudioPlayer({
           onClick={handleNext}
           disabled={currentVerse === totalVerses}
           className="w-12 h-12 rounded-full bg-emerald-50 hover:bg-emerald-100 disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 flex items-center justify-center text-emerald-600 hover:scale-110 disabled:hover:scale-100 cursor-pointer"
-          aria-label="Next verse"
-          title="Next verse (→)"
+          aria-label={t('next')}
+          title={t('nextHint')}
         >
           <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
             <path d="M4.555 5.168A1 1 0 003 6v8a1 1 0 001.555.832L10 11.202V14a1 1 0 001.555.832l6-4a1 1 0 000-1.664l-6-4A1 1 0 0010 6v2.798l-5.445-3.63z" />
@@ -312,8 +314,8 @@ export function ChapterAudioPlayer({
           </div>
         </div>
         <div className="flex justify-between mt-2 text-xs text-gray-500">
-          <span>Verse {currentVerse}</span>
-          <span>{totalVerses} verses total</span>
+          <span>{t('verse')} {currentVerse}</span>
+          <span>{t('totalVerses', { count: totalVerses })}</span>
         </div>
       </div>
 
@@ -328,7 +330,7 @@ export function ChapterAudioPlayer({
               value={currentReciterId || 7}
               onChange={(e) => onReciterChange(Number(e.target.value))}
               className="bg-transparent text-sm text-gray-700 font-medium border-none focus:outline-none cursor-pointer focus:ring-2 focus:ring-emerald-300 rounded"
-              title="Select reciter"
+              title={t('selectReciter')}
             >
               {reciters.map((reciter) => (
                 <option key={reciter.id} value={reciter.id}>
@@ -347,11 +349,11 @@ export function ChapterAudioPlayer({
             value={loopMode}
             onChange={(e) => setLoopMode(e.target.value as 'off' | 'verse' | 'chapter')}
             className="bg-transparent text-sm text-gray-700 font-medium border-none focus:outline-none cursor-pointer focus:ring-2 focus:ring-emerald-300 rounded"
-            title="Loop mode"
+            title={t('loopMode')}
           >
-            <option value="off">No Loop</option>
-            <option value="verse">Loop Verse</option>
-            <option value="chapter">Loop Chapter</option>
+            <option value="off">{t('noLoop')}</option>
+            <option value="verse">{t('loopVerse')}</option>
+            <option value="chapter">{t('loopChapter')}</option>
           </select>
         </div>
 

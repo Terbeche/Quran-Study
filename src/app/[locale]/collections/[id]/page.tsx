@@ -7,13 +7,15 @@ import { getVerseByKey } from '@/lib/api/verses';
 import { VerseCard } from '@/components/verse/VerseCard';
 import RemoveFromCollectionButton from '@/components/collections/RemoveFromCollectionButton';
 import EditCollectionButton from '@/components/collections/EditCollectionButton';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
+import { getTranslations } from 'next-intl/server';
 
 export default async function CollectionDetailPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
+  const t = await getTranslations('collections');
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -69,7 +71,7 @@ export default async function CollectionDetailPage({
           href="/collections"
           className="link text-sm mb-4 inline-block"
         >
-          ← Back to Collections
+          ← {t('backToCollections')}
         </Link>
         <div className="flex items-start justify-between mb-2">
           <div className="flex-1">
@@ -85,20 +87,20 @@ export default async function CollectionDetailPage({
           />
         </div>
         <p className="text-sm mt-2" style={{ color: 'rgba(0,0,0,0.5)' }}>
-          {verses.length} verse{verses.length === 1 ? '' : 's'} in this collection
+          {t('versesInCollection', { count: verses.length })}
         </p>
       </div>
 
       {verses.length === 0 && (
         <div className="text-center py-12 card">
           <p className="mb-4" style={{ color: 'rgba(0,0,0,0.5)' }}>
-            No verses yet. Add verses from the surah pages!
+            {t('noVersesInCollection')}
           </p>
           <Link
             href="/"
             className="link"
           >
-            Browse Quran
+            {t('browseQuran')}
           </Link>
         </div>
       )}
@@ -124,7 +126,7 @@ export default async function CollectionDetailPage({
             ) : (
               <div className="p-4 bg-red-50 border border-red-200 rounded">
                 <p className="text-red-600">
-                  Failed to load verse {verseKey}
+                  {t('failedToLoadVerse', { key: verseKey })}
                 </p>
               </div>
             )}

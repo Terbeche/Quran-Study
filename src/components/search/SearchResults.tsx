@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { SearchResultCard } from './SearchResultCard';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import type { Verse } from '@/types/verse';
 
 interface SearchResultsProps {
@@ -11,6 +12,7 @@ interface SearchResultsProps {
 }
 
 export function SearchResults({ query, searchType }: SearchResultsProps) {
+  const t = useTranslations('search');
   const [verses, setVerses] = useState<Verse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,7 +56,7 @@ export function SearchResults({ query, searchType }: SearchResultsProps) {
           }}
         />
         <p style={{ color: 'rgba(0,0,0,0.6)' }}>
-          {searchType === 'tag' ? 'Searching tags...' : 'Searching verses...'}
+          {t('searching')}
         </p>
       </div>
     );
@@ -64,7 +66,7 @@ export function SearchResults({ query, searchType }: SearchResultsProps) {
     return (
       <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-4">
         <p className="text-red-600">
-          Error loading search results. {searchType === 'tag' ? 'Please try again.' : 'Please check your API credentials.'}
+          {t('errorLoading')}
         </p>
         <p className="text-sm text-red-500 mt-2">{error}</p>
       </div>
@@ -75,13 +77,13 @@ export function SearchResults({ query, searchType }: SearchResultsProps) {
     return (
       <div className="card text-center py-8">
         <p style={{ color: 'rgba(0,0,0,0.6)' }}>
-          {searchType === 'tag' 
-            ? `No verses found with tag "${query}". Try a different tag or make sure tags are public.`
-            : 'No results found. Try different keywords.'}
+          {t('noResults', { query })}
+          <br />
+          {t('tryDifferent')}
         </p>
         {searchType === 'tag' && (
           <Link href="/community-tags" className="mt-4 inline-block link">
-            Browse all community tags →
+            {t('browseAllTags')} →
           </Link>
         )}
       </div>
@@ -91,8 +93,8 @@ export function SearchResults({ query, searchType }: SearchResultsProps) {
   return (
     <>
       <div className="mb-4 text-sm" style={{ color: 'rgba(0,0,0,0.6)' }}>
-        Found {verses.length} verse{verses.length === 1 ? '' : 's'} 
-        {searchType === 'tag' && ` tagged with "${query}"`}
+        {t('foundVerses', { count: verses.length })}
+        {searchType === 'tag' && ` ${t('taggedWith', { query })}`}
       </div>
       <div className="space-y-4">
         {verses.map((verse) => (

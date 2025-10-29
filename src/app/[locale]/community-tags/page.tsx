@@ -3,9 +3,11 @@ import { db } from '@/db';
 import { tags, tagVotes } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import VoteButton from '@/components/community/VoteButton';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
+import { getTranslations } from 'next-intl/server';
 
 export default async function CommunityTagsPage() {
+  const t = await getTranslations('community');
   const session = await auth();
   const userId = session?.user?.id;
 
@@ -43,20 +45,20 @@ export default async function CommunityTagsPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 animate-fade-in">
       <div className="mb-8">
-        <h1 className="section-title mb-2">Community Tags</h1>
+        <h1 className="section-title mb-2">{t('title')}</h1>
         <p style={{ color: 'var(--foreground)' }}>
-          Discover how others tag and organize Quranic verses
+          {t('description')}
         </p>
       </div>
 
       {publicTags.length === 0 && (
         <div className="text-center py-12 card">
-          <p style={{ color: 'rgba(0,0,0,0.5)' }}>No public tags yet. Be the first to share!</p>
+          <p style={{ color: 'rgba(0,0,0,0.5)' }}>{t('noTags')}</p>
           <Link
             href="/tags"
             className="mt-4 inline-block btn-primary"
           >
-            Go to My Tags
+            {t('goToMyTags')}
           </Link>
         </div>
       )}
@@ -79,14 +81,13 @@ export default async function CommunityTagsPage() {
                 </h2>
                 <div className="flex items-center gap-4">
                   <div className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
-                    <span className="font-medium">{tagList.length}</span> verse
-                    {tagList.length > 1 ? 's' : ''} · <span className="font-medium">{totalVotes}</span> total votes
+                    <span className="font-medium">{tagList.length}</span> {t('verse', { count: tagList.length })} · <span className="font-medium">{totalVotes}</span> {t('totalVotes')}
                   </div>
                   <Link
                     href={`/search?q=${encodeURIComponent(tagText)}&type=tag`}
                     className="text-sm link whitespace-nowrap"
                   >
-                    Search →
+                    {t('search')} →
                   </Link>
                 </div>
               </div>
@@ -104,7 +105,7 @@ export default async function CommunityTagsPage() {
                         href={`/surah/${chapterId}#verse-${verseNumber}`}
                         className="link font-medium"
                       >
-                        Verse {tag.verseKey}
+                        {t('verseLink', { key: tag.verseKey })}
                       </Link>
 
                       {userId ? (
@@ -120,7 +121,7 @@ export default async function CommunityTagsPage() {
                           href="/auth/signin"
                           className="text-sm link"
                         >
-                          Sign in to vote
+                          {t('signInToVote')}
                         </Link>
                       </div>
                     )}

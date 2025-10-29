@@ -1,6 +1,7 @@
 'use client';
 
 import { useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { removeVerseFromCollectionAction } from '@/actions/collection-actions';
 
 interface RemoveFromCollectionButtonProps {
@@ -12,6 +13,7 @@ export default function RemoveFromCollectionButton({
   collectionId,
   verseKey,
 }: RemoveFromCollectionButtonProps) {
+  const t = useTranslations('collections');
   const [isPending, startTransition] = useTransition();
 
   const handleRemove = () => {
@@ -25,9 +27,9 @@ export default function RemoveFromCollectionButton({
       onClick={handleRemove}
       disabled={isPending}
       className="px-3 py-1 text-xs text-red-600 hover:text-red-800 hover:bg-red-50 rounded disabled:opacity-50 transition-colors"
-      title="Remove from collection"
+      title={t('removeFromCollection')}
     >
-      Remove from Collection
+      {t('removeFromCollection')}
     </button>
   );
 }

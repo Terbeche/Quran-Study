@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { signUpAction } from "@/app/auth/signup/actions";
+import { useRouter } from "@/i18n/routing";
+import { signUpAction } from "@/app/[locale]/auth/signup/actions";
+import { useTranslations } from 'next-intl';
 
 export function SignUpForm() {
   const router = useRouter();
+  const t = useTranslations('auth.signUp');
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -24,11 +26,11 @@ export function SignUpForm() {
         // Navigate client-side after successful signup
         router.push("/auth/signin");
       } else {
-        setError("Failed to create account. Please try again.");
+        setError(t('error'));
       }
     } catch (err) {
       console.error("Sign up action error:", err);
-      setError("An unexpected error occurred. Please try again.");
+      setError(t('error'));
     } finally {
       setLoading(false);
     }
@@ -44,7 +46,7 @@ export function SignUpForm() {
 
       <div>
         <label htmlFor="name" className="block text-sm font-medium mb-1 text-accent">
-          Name
+          {t('nameLabel')}
         </label>
         <input
           id="name"
@@ -52,13 +54,13 @@ export function SignUpForm() {
           type="text"
           required
           className="input"
-          placeholder="Your name"
+          placeholder={t('namePlaceholder')}
         />
       </div>
 
       <div>
         <label htmlFor="email" className="block text-sm font-medium mb-1 text-accent">
-          Email
+          {t('emailLabel')}
         </label>
         <input
           id="email"
@@ -66,13 +68,13 @@ export function SignUpForm() {
           type="email"
           required
           className="input"
-          placeholder="you@example.com"
+          placeholder={t('emailPlaceholder')}
         />
       </div>
 
       <div>
         <label htmlFor="password" className="block text-sm font-medium mb-1 text-accent">
-          Password
+          {t('passwordLabel')}
         </label>
         <input
           id="password"
@@ -81,7 +83,7 @@ export function SignUpForm() {
           required
           minLength={8}
           className="input"
-          placeholder="••••••••"
+          placeholder={t('passwordPlaceholder')}
         />
         <p className="text-xs mt-1" style={{ color: 'rgba(0,0,0,0.6)' }}>At least 8 characters</p>
       </div>
@@ -91,7 +93,7 @@ export function SignUpForm() {
         disabled={loading}
         className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
       >
-        {loading ? 'Creating account...' : 'Create Account'}
+        {loading ? `${t('submitButton')}...` : t('submitButton')}
       </button>
     </form>
   );

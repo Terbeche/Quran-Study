@@ -1,7 +1,8 @@
 import { SearchBar } from '@/components/search/SearchBar';
 import { SearchResults } from '@/components/search/SearchResults';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import { getChapters } from '@/lib/api/chapters';
+import { getTranslations } from 'next-intl/server';
 import type { Chapter } from '@/types/verse';
 
 export const dynamic = 'force-dynamic';
@@ -14,6 +15,8 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   const params = await searchParams;
   const query = params.q || '';
   const searchType = params.type === 'tag' ? 'tag' : 'text';
+  const t = await getTranslations('search');
+  const tHome = await getTranslations('home');
 
   // Load all chapters for browsing
   let chapters: Chapter[] = [];
@@ -27,15 +30,15 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   if (!query) {
     return (
       <div className="container mx-auto px-4 py-8 animate-fade-in">
-        <h1 className="section-title">Search Quran</h1>
+        <h1 className="section-title">{t('searchQuran')}</h1>
         <SearchBar />
         <p className="mt-4 mb-8" style={{ color: 'var(--foreground)' }}>
-          Search by text content or by tags. Browse all chapters below.
+          {t('searchDescription')}
         </p>
         
         {/* All Chapters */}
         <div className="mt-8">
-          <h2 className="section-title">📚 All Chapters (Surahs)</h2>
+          <h2 className="section-title">{t('allChapters')}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {chapters.map((chapter) => (
               <Link
@@ -51,7 +54,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
                   <div className="text-2xl font-arabic text-accent">{chapter.name_arabic}</div>
                 </div>
                 <div className="text-xs flex gap-4" style={{ color: 'rgba(0,0,0,0.5)' }}>
-                  <span>{chapter.verses_count} verses</span>
+                  <span>{tHome('chapter.verses', { count: chapter.verses_count })}</span>
                   <span className="capitalize">{chapter.revelation_place}</span>
                 </div>
               </Link>
@@ -65,7 +68,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
   return (
     <div className="container mx-auto px-4 py-8 animate-fade-in">
       <h1 className="section-title">
-        {searchType === 'tag' ? '🏷️ Tag Search Results' : '📖 Text Search Results'}
+        {searchType === 'tag' ? t('tagSearchResults') : t('textSearchResults')}
       </h1>
       <SearchBar initialQuery={query} initialSearchType={searchType} />
       <SearchResults query={query} searchType={searchType} />

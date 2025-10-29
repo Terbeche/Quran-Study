@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useTranslations } from 'next-intl';
 import { toggleTagVisibilityAction } from '@/actions/tag-actions';
 
 interface TagToggleButtonProps {
@@ -10,6 +11,7 @@ interface TagToggleButtonProps {
 }
 
 export default function TagToggleButton({ tagId, isPublic, onToggle }: TagToggleButtonProps) {
+  const t = useTranslations('tags');
   const [isPending, startTransition] = useTransition();
   const [localIsPublic, setLocalIsPublic] = useState(isPublic);
 
@@ -42,9 +44,9 @@ export default function TagToggleButton({ tagId, isPublic, onToggle }: TagToggle
           : 'hover:bg-gray-300 hover:shadow-sm'
       } disabled:opacity-50 disabled:cursor-not-allowed`}
       style={localIsPublic ? {} : { background: 'rgba(0,0,0,0.1)', color: 'var(--foreground)' }}
-      title={localIsPublic ? 'Make private' : 'Make public'}
+      title={localIsPublic ? t('makePrivate') : t('makePublic')}
     >
-      {localIsPublic ? '🌐 Public' : '🔒 Private'}
+      {localIsPublic ? `🌐 ${t('publicTag')}` : `🔒 ${t('privateTag')}`}
     </button>
   );
 }

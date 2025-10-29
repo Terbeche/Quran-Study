@@ -3,12 +3,15 @@ import { redirect } from 'next/navigation';
 import { db } from '@/db';
 import { tags } from '@/db/schema';
 import { eq, desc } from 'drizzle-orm';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import TagToggleButton from '@/components/tags/TagToggleButton';
 import DeleteTagButton from '@/components/tags/DeleteTagButton';
+import { getTranslations } from 'next-intl/server';
 
 export default async function MyTagsPage() {
   const session = await auth();
+  const t = await getTranslations('tags');
+  const tVerse = await getTranslations('verse');
 
   if (!session?.user?.id) {
     redirect('/auth/signin');
@@ -31,11 +34,11 @@ export default async function MyTagsPage() {
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 animate-fade-in">
-      <h1 className="section-title">My Tags</h1>
+      <h1 className="section-title">{t('title')}</h1>
 
       {Object.keys(groupedTags).length === 0 && (
         <p style={{ color: 'rgba(0,0,0,0.6)' }}>
-          No tags yet. Start tagging verses to organize your study!
+          {t('noTags')}. {t('createFirst')}
         </p>
       )}
 
@@ -52,7 +55,9 @@ export default async function MyTagsPage() {
               </Link>
               {' '}
               <span className="text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
-                ({tagList.length} verse{tagList.length > 1 ? 's' : ''})
+                ({tagList.length === 1 
+                  ? t('verseCountSingular') 
+                  : t('verseCount', { count: tagList.length })})
               </span>
             </h2>
             <Link
@@ -75,7 +80,7 @@ export default async function MyTagsPage() {
                     href={`/surah/${chapterId}#verse-${verseNumber}`}
                     className="link font-medium"
                   >
-                    Verse {tag.verseKey}
+                    {tVerse('verse')} {tag.verseKey}
                   </Link>
                   
                   <div className="flex items-center gap-2">

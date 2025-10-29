@@ -3,13 +3,15 @@ import { redirect } from 'next/navigation';
 import { db } from '@/db';
 import { collections, collectionVerses } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
-import Link from 'next/link';
+import { Link } from '@/i18n/routing';
 import CreateCollectionButton from '@/components/collections/CreateCollectionButton';
 import DeleteCollectionButton from '@/components/collections/DeleteCollectionButton';
 import EditCollectionButton from '@/components/collections/EditCollectionButton';
+import { getTranslations } from 'next-intl/server';
 
 export default async function CollectionsPage() {
   const session = await auth();
+  const t = await getTranslations('collections');
 
   if (!session?.user?.id) {
     redirect('/auth/signin');
@@ -35,13 +37,13 @@ export default async function CollectionsPage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4 animate-fade-in">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="section-title mb-0">My Collections</h1>
+        <h1 className="section-title mb-0">{t('title')}</h1>
         <CreateCollectionButton />
       </div>
 
       {userCollections.length === 0 && (
         <p style={{ color: 'rgba(0,0,0,0.5)' }}>
-          No collections yet. Create one to organize your favorite verses!
+          {t('noCollections')}. {t('createFirst')}
         </p>
       )}
 
@@ -75,9 +77,13 @@ export default async function CollectionsPage() {
             )}
             
             <div className="flex items-center gap-4 text-sm" style={{ color: 'rgba(0,0,0,0.5)' }}>
-              <span>{collection.verseCount} verse{collection.verseCount === 1 ? '' : 's'}</span>
+              <span>
+                {collection.verseCount === 1 
+                  ? t('verseCountSingular') 
+                  : t('verseCount', { count: collection.verseCount })}
+              </span>
               {collection.isPublic && (
-                <span className="badge">Public</span>
+                <span className="badge">{t('publicTag')}</span>
               )}
             </div>
           </div>

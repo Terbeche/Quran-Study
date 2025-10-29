@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, useTransition } from 'react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/routing';
 import { removeVerseFromCollectionAction } from '@/actions/collection-actions';
 
 interface Collection {
@@ -15,6 +16,7 @@ interface VerseCollectionBadgesClientProps {
 }
 
 export function VerseCollectionBadgesClient({ verseKey, initialCollections }: VerseCollectionBadgesClientProps) {
+  const t = useTranslations('verse');
   const [collections, setCollections] = useState<Collection[]>(initialCollections);
   const [isPending, startTransition] = useTransition();
 
@@ -43,7 +45,7 @@ export function VerseCollectionBadgesClient({ verseKey, initialCollections }: Ve
   return (
     <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(16, 185, 129, 0.1)' }}>
       <div className="flex items-start gap-2">
-        <span className="text-xs font-medium mt-1" style={{ color: 'rgba(0,0,0,0.5)' }}>In Collections:</span>
+        <span className="text-xs font-medium mt-1" style={{ color: 'rgba(0,0,0,0.5)' }}>{t('inCollections')}:</span>
         <div className="flex flex-wrap gap-2">
           {collections.map((collection) => (
             <div
@@ -61,7 +63,7 @@ export function VerseCollectionBadgesClient({ verseKey, initialCollections }: Ve
                 className="hover:text-red-600 hover:scale-110 font-bold ml-1 transition-all cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
                 disabled={isPending}
                 aria-label={`Remove from ${collection.name}`}
-                title="Remove from collection"
+                title={t('removeFromCollection')}
               >
                 ×
               </button>
