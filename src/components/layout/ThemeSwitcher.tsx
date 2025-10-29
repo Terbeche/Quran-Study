@@ -41,7 +41,7 @@ export default function ThemeSwitcher() {
   return (
     <button
       onClick={toggleTheme}
-      className="flex items-center justify-center w-10 h-10 rounded-md transition-all duration-300 hover:scale-110"
+      className="flex items-center justify-center w-10 h-10 rounded-md transition-all duration-300 hover:scale-110 cursor-pointer"
       style={{ 
         background: theme === 'dark' ? 'rgba(52, 211, 153, 0.1)' : 'rgba(16, 185, 129, 0.1)',
         color: 'var(--primary-green)'
