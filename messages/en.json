@@ -23,7 +23,9 @@
     "community": "Community",
     "signIn": "Sign In",
     "signUp": "Sign Up",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode"
   },
   "home": {
     "heroTitle": "Study the Quran with Deep Insights",

@@ -23,7 +23,9 @@
     "community": "Communauté",
     "signIn": "Se Connecter",
     "signUp": "S'Inscrire",
-    "signOut": "Se Déconnecter"
+    "signOut": "Se Déconnecter",
+    "darkMode": "Mode sombre",
+    "lightMode": "Mode clair"
   },
   "home": {
     "heroTitle": "Étudiez le Coran avec des perspectives approfondies",
