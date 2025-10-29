@@ -29,7 +29,8 @@
     "postgres": "^3.4.7",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "tailwind-merge": "^3.3.1"
+    "tailwind-merge": "^3.3.1",
+    "drizzle-kit": "^0.31.5"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
@@ -39,10 +40,12 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "drizzle-kit": "^0.31.5",
     "eslint": "^9",
     "eslint-config-next": "^15.5.6",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": "20.x"
   }
 }

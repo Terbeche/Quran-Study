@@ -11,6 +11,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: 'jwt',
   },
+  trustHost: true, // Trust all hosts (required for Heroku)
   providers: [
     Credentials({
       name: 'credentials',
