@@ -100,16 +100,8 @@ export default function EditCollectionButton({
                     setDescription(currentDescription || '');
                     setError('');
                   }}
-                  className="px-4 py-2 border rounded-md transition-all duration-200 text-accent cursor-pointer hover:shadow-md"
+                  className="px-4 py-2 border rounded-md transition-all text-accent cursor-pointer"
                   style={{ borderColor: 'var(--primary-green)', background: 'transparent' }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--primary-green)';
-                    e.currentTarget.style.color = '#f1f5f9';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.color = 'var(--primary-green)';
-                  }}
                 >
                   {tCommon('cancel')}
                 </button>
