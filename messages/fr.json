@@ -50,7 +50,7 @@
       },
       "community": {
         "title": "Perspectives de la communauté",
-        "description": "Découvrez comment les autres étiquettent et interprètent les versets"
+        "description": "Découvrez comment les autres étiquettent les versets"
       }
     },
     "getStarted": "Commencer",
@@ -238,5 +238,18 @@
     "notFound": "Page non trouvée",
     "unauthorized": "Vous devez être connecté pour faire cela",
     "forbidden": "Vous n'avez pas la permission de faire cela"
+  },
+  "profile": {
+    "title": "Profil",
+    "description": "Gérer les informations de votre profil",
+    "backToHome": "Retour à l'accueil",
+    "emailLabel": "Email",
+    "emailHint": "Votre email ne peut pas être modifié",
+    "nameLabel": "Nom",
+    "namePlaceholder": "Votre nom",
+    "nameRequired": "Le nom est requis",
+    "saveButton": "Enregistrer les modifications",
+    "updateSuccess": "Profil mis à jour avec succès",
+    "updateError": "Échec de la mise à jour du profil"
   }
 }

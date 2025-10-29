@@ -50,7 +50,7 @@
       },
       "community": {
         "title": "Community Insights",
-        "description": "Discover how others tag and interpret verses"
+        "description": "Discover how others tag verses"
       }
     },
     "getStarted": "Get Started",
@@ -238,5 +238,18 @@
     "notFound": "Page not found",
     "unauthorized": "You must be signed in to do this",
     "forbidden": "You don't have permission to do this"
+  },
+  "profile": {
+    "title": "Profile",
+    "description": "Manage your profile information",
+    "backToHome": "Back to Home",
+    "emailLabel": "Email",
+    "emailHint": "Your email cannot be changed",
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name",
+    "nameRequired": "Name is required",
+    "saveButton": "Save Changes",
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Failed to update profile"
   }
 }

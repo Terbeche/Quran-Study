@@ -37,12 +37,17 @@ export async function Header() {
                   {t('community')}
                 </Link>
                 <div className="flex items-center gap-3 pl-4 border-l" style={{ borderColor: 'rgba(4,120,87,0.06)' }}>
-                  <div className="w-8 h-8 avatar-bg rounded-full flex items-center justify-center text-white text-sm font-bold">
-                    {session.user.name?.[0]?.toUpperCase() || session.user.email?.[0]?.toUpperCase()}
-                  </div>
-                  <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
-                    {session.user.name || session.user.email}
-                  </span>
+                  <Link 
+                    href="/profile" 
+                    className="flex items-center gap-2 cursor-pointer transition-all hover:scale-105 hover:opacity-80"
+                  >
+                    <div className="w-8 h-8 avatar-bg rounded-full flex items-center justify-center text-white text-sm font-bold">
+                      {session.user.name?.[0]?.toUpperCase() || session.user.email?.[0]?.toUpperCase()}
+                    </div>
+                    <span className="text-sm font-medium" style={{ color: 'var(--foreground)' }}>
+                      {session.user.name || session.user.email}
+                    </span>
+                  </Link>
                   <SignOutButton />
                   <ThemeSwitcher />
                   <LanguageSwitcher />
