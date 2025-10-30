@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
   },
   // Explicitly set the workspace root to avoid lockfile warnings
   outputFileTracingRoot: __dirname,
+  // Enable compression
+  compress: true,
+  // Optimize production builds
+  productionBrowserSourceMaps: false,
+  // Optimize images
   images: {
     remotePatterns: [
       {
@@ -27,6 +32,7 @@ const nextConfig: NextConfig = {
         hostname: 'verses.quran.com',
       },
     ],
+    formats: ['image/avif', 'image/webp'],
   },
   // Essential security headers
   async headers() {
