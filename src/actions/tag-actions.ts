@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 import { db } from '@/db';
 import { tags } from '@/db/schema';
@@ -37,9 +36,6 @@ export async function createTagAction(verseKey: string, tagText: string, isPubli
       })
       .returning();
 
-    revalidatePath(`/surah/${verseKey.split(':')[0]}`);
-    revalidatePath('/tags');
-
     return { data: tag };
   } catch (error) {
     console.error('Create tag error:', error);
@@ -69,7 +65,6 @@ export async function deleteTagAction(tagId: string) {
       eq(tags.userId, session.user.id)
     ));
 
-  revalidatePath('/tags');
   return { success: true };
 }
 
@@ -89,8 +84,6 @@ export async function toggleTagVisibilityAction(tagId: string, isPublic: boolean
     ))
     .returning();
 
-  revalidatePath('/tags');
-  revalidatePath('/community-tags');
 
   return { data: tag };
 }

@@ -41,7 +41,19 @@ export default function AddToCollectionButton({
       if (result.error) {
         setError(result.error);
       } else {
+        // Mark collection as added
         setCollectionIdsWithVerse(prev => new Set([...prev, collectionId]));
+        
+        // Find the collection name to send in the event
+        const collection = collections.find(c => c.id === collectionId);
+        
+        // Dispatch custom event to notify other components
+        if (collection && typeof globalThis !== 'undefined') {
+          globalThis.dispatchEvent(new CustomEvent('verse-added-to-collection', {
+            detail: { verseKey, collectionId, collectionName: collection.name }
+          }));
+        }
+        
         setIsOpen(false);
       }
     });

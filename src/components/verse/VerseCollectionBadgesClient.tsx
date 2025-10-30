@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { removeVerseFromCollectionAction } from '@/actions/collection-actions';
@@ -19,6 +19,27 @@ export function VerseCollectionBadgesClient({ verseKey, initialCollections }: Ve
   const t = useTranslations('verse');
   const [collections, setCollections] = useState<Collection[]>(initialCollections);
   const [isPending, startTransition] = useTransition();
+
+  // Listen for collection additions
+  useEffect(() => {
+    const handleCollectionAdded = (event: CustomEvent) => {
+      const { verseKey: eventVerseKey, collectionId, collectionName } = event.detail;
+      if (eventVerseKey === verseKey) {
+        // Add the new collection to the list if not already present
+        setCollections(prev => {
+          if (prev.some(c => c.id === collectionId)) {
+            return prev;
+          }
+          return [...prev, { id: collectionId, name: collectionName }];
+        });
+      }
+    };
+
+    globalThis.addEventListener('verse-added-to-collection', handleCollectionAdded as EventListener);
+    return () => {
+      globalThis.removeEventListener('verse-added-to-collection', handleCollectionAdded as EventListener);
+    };
+  }, [verseKey]);
 
   const handleRemove = (collectionId: string) => {
     startTransition(async () => {

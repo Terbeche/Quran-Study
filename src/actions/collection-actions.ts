@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 import { db } from '@/db';
 import { collections, collectionVerses } from '@/db/schema';
@@ -32,8 +31,6 @@ export async function createCollectionAction(name: string, description?: string)
         description: description?.trim() || null,
       })
       .returning();
-
-    revalidatePath('/collections');
     return { data: collection };
   } catch (error) {
     console.error('Create collection error:', error);
@@ -63,7 +60,6 @@ export async function deleteCollectionAction(collectionId: string) {
         eq(collections.userId, session.user.id)
       ));
 
-    revalidatePath('/collections');
     return { success: true };
   } catch (error) {
     console.error('Delete collection error:', error);
@@ -115,8 +111,6 @@ export async function addVerseToCollectionAction(
       })
       .returning();
 
-    revalidatePath(`/collections/${collectionId}`);
-    revalidatePath('/collections');
     return { data: verse };
   } catch (error) {
     console.error('Add verse error:', error);
@@ -163,8 +157,6 @@ export async function removeVerseFromCollectionAction(
         eq(collectionVerses.verseKey, verseKey)
       ));
 
-    revalidatePath(`/collections/${collectionId}`);
-    revalidatePath('/collections');
     return { success: true };
   } catch (error) {
     console.error('Remove verse error:', error);
@@ -239,8 +231,6 @@ export async function updateCollectionAction(
       return { error: 'Collection not found' };
     }
 
-    revalidatePath('/collections');
-    revalidatePath(`/collections/${collectionId}`);
     return { data: collection };
   } catch (error) {
     console.error('Update collection error:', error);

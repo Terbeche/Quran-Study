@@ -1,6 +1,5 @@
 'use server';
 
-import { revalidatePath } from 'next/cache';
 import { auth } from '@/auth';
 import { db } from '@/db';
 import { tags, tagVotes } from '@/db/schema';
@@ -39,8 +38,6 @@ export async function voteOnTagAction(tagId: string, value: 1 | -1) {
           .set({ votes: sql`${tags.votes} - ${value}` })
           .where(eq(tags.id, tagId));
 
-        revalidatePath('/community-tags');
-        revalidatePath('/tags');
         return { success: true, action: 'removed' };
       } else {
         // Change vote (from upvote to downvote or vice versa)
@@ -55,8 +52,6 @@ export async function voteOnTagAction(tagId: string, value: 1 | -1) {
           .set({ votes: sql`${tags.votes} + ${value * 2}` })
           .where(eq(tags.id, tagId));
 
-        revalidatePath('/community-tags');
-        revalidatePath('/tags');
         return { success: true, action: 'changed' };
       }
     } else {
@@ -73,8 +68,6 @@ export async function voteOnTagAction(tagId: string, value: 1 | -1) {
         .set({ votes: sql`${tags.votes} + ${value}` })
         .where(eq(tags.id, tagId));
 
-      revalidatePath('/community-tags');
-      revalidatePath('/tags');
       return { success: true, action: 'added' };
     }
   } catch (error) {
