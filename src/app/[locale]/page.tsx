@@ -50,7 +50,7 @@ export default async function Home() {
     <div className="container mx-auto px-4 py-8 animate-fade-in">
       {/* Hero Section */}
       <div className="max-w-4xl mx-auto text-center mb-12">
-        <h1 className="text-5xl font-bold mb-4 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent animate-slide-in">
+        <h1 className="text-5xl font-bold p-2 mb-4 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent animate-slide-in">
           {t('heroTitle')}
         </h1>
         <p className="text-xl mb-8" style={{ color: 'var(--foreground)' }}>
