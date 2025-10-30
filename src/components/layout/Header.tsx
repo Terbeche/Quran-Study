@@ -3,6 +3,7 @@ import { SignOutButton } from './SignOutButton';
 import { Link } from '@/i18n/routing';
 import LanguageSwitcher from './LanguageSwitcher';
 import ThemeSwitcher from './ThemeSwitcher';
+import { MobileMenu } from './MobileMenu';
 import { getTranslations } from 'next-intl/server';
 
 export async function Header() {
@@ -11,20 +12,21 @@ export async function Header() {
 
   return (
     <header className="header sticky top-0 z-50">
-      <div className="container mx-auto px-4 py-4">
+      <div className="container mx-auto px-4 py-3 md:py-4">
         <div className="flex justify-between items-center">
           <Link href="/" className="group">
             <div className="flex items-center gap-2">
-              <div className="w-10 h-10 avatar-bg rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                <span className="text-white text-xl font-bold">📖</span>
+              <div className="w-8 h-8 md:w-10 md:h-10 avatar-bg rounded-xl flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                <span className="text-white text-lg md:text-xl font-bold">📖</span>
               </div>
-              <h1 className="text-2xl font-bold text-accent">
+              <h1 className="text-xl md:text-2xl font-bold text-accent">
                 {t('appName')}
               </h1>
             </div>
           </Link>
 
-          <nav className="flex gap-6 items-center">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex gap-6 items-center">
             {session?.user ? (
               <>
                 <Link href="/tags" className="text-accent font-medium transition-colors">
@@ -75,6 +77,13 @@ export async function Header() {
               </>
             )}
           </nav>
+
+          {/* Mobile Navigation */}
+          <MobileMenu
+            isAuthenticated={!!session?.user}
+            userName={session?.user?.name}
+            userEmail={session?.user?.email}
+          />
         </div>
       </div>
     </header>

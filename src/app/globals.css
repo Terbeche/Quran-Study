@@ -111,6 +111,17 @@ div[class*="mx-auto"] {
   }
 }
 
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 @keyframes pulse-glow {
   0%, 100% {
     box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
@@ -135,6 +146,10 @@ div[class*="mx-auto"] {
 
 .animate-slide-in {
   animation: slideIn 0.4s ease-out;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s ease-out;
 }
 
 .animate-pulse-glow {

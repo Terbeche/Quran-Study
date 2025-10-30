@@ -7,7 +7,6 @@ import { getVerseAudio } from '@/lib/quran-api/client';
 import { auth } from '@/auth';
 import type { Chapter, Verse } from '@/types/verse';
 
-export const dynamic = 'force-dynamic';
 export const revalidate = 3600;
 
 export default async function Home() {
@@ -47,26 +46,26 @@ export default async function Home() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 animate-fade-in">
+    <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8 animate-fade-in">
       {/* Hero Section */}
-      <div className="max-w-4xl mx-auto text-center mb-12">
-        <h1 className="text-5xl font-bold p-2 mb-4 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent animate-slide-in">
+      <div className="max-w-4xl mx-auto text-center mb-8 md:mb-12">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold p-2 mb-3 md:mb-4 bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent animate-slide-in">
           {t('heroTitle')}
         </h1>
-        <p className="text-xl mb-8" style={{ color: 'var(--foreground)' }}>
+        <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 px-2" style={{ color: 'var(--foreground)' }}>
           {t('heroDescription')}
         </p>
-        <div className="flex gap-4 justify-center">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
           <Link
             href="/search"
-            className="btn-primary font-medium"
+            className="btn-primary font-medium text-sm sm:text-base"
           >
             🔍 {t('searchQuran')}
           </Link>
           {!session?.user && (
             <Link
               href="/auth/signin"
-              className="px-6 py-3 border-2 rounded-xl font-medium transition-all duration-300"
+              className="px-6 py-3 border-2 rounded-xl font-medium transition-all duration-300 text-sm sm:text-base"
               style={{ 
                 borderColor: 'var(--primary-green)', 
                 color: 'var(--primary-green)',
@@ -81,39 +80,39 @@ export default async function Home() {
 
       {/* Featured Verse */}
       {featuredVerse && (
-        <div className="max-w-4xl mx-auto mb-12 animate-fade-in">
-          <h2 className="section-title">📖 {t('featuredVerse')}: {t('ayatAlKursi')}</h2>
+        <div className="max-w-4xl mx-auto mb-8 md:mb-12 animate-fade-in">
+          <h2 className="section-title text-xl sm:text-2xl">📖 {t('featuredVerse')}: {t('ayatAlKursi')}</h2>
           <VerseCard verse={featuredVerse} audioUrl={featuredVerseAudio} />
         </div>
       )}
 
       {/* Browse Chapters */}
       <div className="max-w-6xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="section-title mb-0">📚 {t('browseChapters')}</h2>
+        <div className="flex justify-between items-center mb-4 md:mb-6">
+          <h2 className="section-title mb-0 text-xl sm:text-2xl">📚 {t('browseChapters')}</h2>
           <Link 
             href="/search"
-            className="link font-medium"
+            className="link font-medium text-sm sm:text-base"
           >
             {t('viewAll')} →
           </Link>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {chapters.slice(0, 12).map((chapter) => (
             <Link
               key={chapter.id}
               href={`/surah/${chapter.id}`}
               className="card card-hover"
             >
-              <div className="flex justify-between items-start mb-2">
-                <div>
-                  <h3 className="font-bold text-lg" style={{ color: 'var(--dark-green)' }}>{chapter.name_simple}</h3>
-                  <p className="text-sm" style={{ color: 'var(--foreground)' }}>{chapter.translated_name?.name}</p>
+              <div className="flex justify-between items-start mb-2 gap-2">
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-base sm:text-lg truncate" style={{ color: 'var(--dark-green)' }}>{chapter.name_simple}</h3>
+                  <p className="text-xs sm:text-sm truncate" style={{ color: 'var(--foreground)' }}>{chapter.translated_name?.name}</p>
                 </div>
-                <div className="text-2xl font-arabic" style={{ color: 'var(--dark-green)' }}>{chapter.name_arabic}</div>
+                <div className="text-xl sm:text-2xl font-arabic flex-shrink-0" style={{ color: 'var(--dark-green)' }}>{chapter.name_arabic}</div>
               </div>
-              <div className="text-xs flex gap-4" style={{ color: 'var(--text-muted)' }}>
+              <div className="text-xs flex gap-3 sm:gap-4" style={{ color: 'var(--text-muted)' }}>
                 <span>{tChapter('verses', { count: chapter.verses_count })}</span>
                 <span className="capitalize">{chapter.revelation_place}</span>
               </div>
@@ -122,14 +121,14 @@ export default async function Home() {
         </div>
 
         {chapters.length === 0 && (
-          <div className="text-center py-12 card">
+          <div className="text-center py-8 md:py-12 card">
             <p style={{ color: 'var(--text-muted)' }}>{t('failedToLoad')}</p>
           </div>
         )}
       </div>
 
       {/* Features Section */}
-      <div className="max-w-6xl mx-auto mt-16 grid md:grid-cols-3 gap-8">
+      <div className="max-w-6xl mx-auto mt-12 md:mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8">
         <div className="feature-box">
           <div className="text-4xl mb-4">🏷️</div>
           <h3 className="font-bold text-xl mb-2" style={{ color: 'var(--dark-green)' }}>{t('features.tag.title')}</h3>

@@ -13,7 +13,7 @@ import type { Chapter, Verse } from '@/types/verse';
 import type { Collection } from '@/types/collection';
 import type { Metadata } from 'next';
 
-export const dynamic = 'force-dynamic';
+export const revalidate = 3600;
 
 interface SurahPageProps {
   params: Promise<{ id: string }>;
@@ -108,25 +108,25 @@ export default async function SurahPage({ params }: SurahPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 animate-fade-in">
+    <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8 animate-fade-in max-w-5xl">
       {/* Chapter Header */}
-      <div className="mb-8">
-        <Link href="/" className="link mb-4 inline-block">
+      <div className="mb-6 md:mb-8">
+        <Link href="/" className="link mb-3 md:mb-4 inline-block text-sm md:text-base">
           ← {t('backToHome')}
         </Link>
         
         <div className="card">
-          <div className="flex justify-between items-start mb-4">
-            <div>
-              <h1 className="text-3xl font-bold mb-2 text-accent">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+            <div className="flex-1">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-accent">
                 {chapter.name_simple}
               </h1>
-              <p style={{ color: 'var(--foreground)' }}>{chapter.translated_name?.name}</p>
+              <p className="text-sm md:text-base" style={{ color: 'var(--foreground)' }}>{chapter.translated_name?.name}</p>
             </div>
-            <div className="text-4xl font-arabic text-accent">{chapter.name_arabic}</div>
+            <div className="text-3xl sm:text-4xl font-arabic text-accent">{chapter.name_arabic}</div>
           </div>
           
-          <div className="flex gap-6 text-sm" style={{ color: 'var(--foreground)' }}>
+          <div className="flex flex-wrap gap-3 sm:gap-6 text-xs sm:text-sm" style={{ color: 'var(--foreground)' }}>
             <span>📖 {t('verses', { count: chapter.verses_count })}</span>
             <span className="capitalize">📍 {t('revelationPlace', { place: t(chapter.revelation_place) })}</span>
             <span>🔢 {t('chapterNumber', { number: chapter.id })}</span>
