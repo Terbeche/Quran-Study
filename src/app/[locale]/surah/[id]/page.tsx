@@ -1,5 +1,6 @@
 import { VerseCard } from '@/components/verse/VerseCard';
 import { ReciterAudioPlayer } from '@/components/verse/ReciterAudioPlayer';
+import { ScrollToHash } from '@/components/layout/ScrollToHash';
 import { Link } from '@/i18n/routing';
 import { getChapter } from '@/lib/api/chapters';
 import { getVersesByChapter } from '@/lib/api/verses';
@@ -109,6 +110,9 @@ export default async function SurahPage({ params }: SurahPageProps) {
 
   return (
     <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8 animate-fade-in max-w-5xl">
+      {/* Handle scroll to hash for verse navigation */}
+      <ScrollToHash />
+      
       {/* Chapter Header */}
       <div className="mb-6 md:mb-8">
         <Link href="/" className="link mb-3 md:mb-4 inline-block text-sm md:text-base">
