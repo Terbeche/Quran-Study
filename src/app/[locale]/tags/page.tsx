@@ -35,8 +35,10 @@ export default async function MyTagsPage() {
         initialTags={userTags} 
         translations={{
           verseCountSingular: t('verseCountSingular'),
-          verseCountPlural: t('verseCount', { count: 0 }), // Template for plural
+          verseCountPlural: t('verseCount', { count: 0 }),
           verse: tVerse('verse'),
+          searchThisTag: t('searchThisTag'),
+          delete: t('delete'),
         }}
       />
     </div>
