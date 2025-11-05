@@ -28,10 +28,6 @@ export async function VerseCollectionBadges({ verseKey }: VerseCollectionBadgesP
       eq(collectionVerses.verseKey, verseKey)
     ));
 
-  if (verseCollections.length === 0) {
-    return null;
-  }
-
   return (
     <VerseCollectionBadgesClient
       verseKey={verseKey}

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition, useRef } from 'react';
+import { useState, useTransition, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { createTagAction, deleteTagAction } from '@/actions/tag-actions';
 import type { Tag } from '@/types/tag';
@@ -20,6 +20,11 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
   const [error, setError] = useState('');
   const [tags, setTags] = useState<Tag[]>(initialTags);
   const tempIdCounter = useRef(0);
+
+  // Sync tags when initialTags changes
+  useEffect(() => {
+    setTags(initialTags);
+  }, [initialTags]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,17 +87,30 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
       const tagToDelete = tags.find(tag => tag.id === tagId);
       if (tagToDelete) {
         setTags(prev => prev.filter(tag => tag.id !== tagId));
-        
+
         const result = await deleteTagAction(tagId);
         if (result.error) {
-          // Restore the tag on error
           setTags(prev => [...prev, tagToDelete]);
+          return;
+        }
+        
+        // Notify other components about the deletion
+        if (typeof globalThis !== 'undefined') {
+          // If tag was public, notify CommunityTagsPreview to refetch
+          if (tagToDelete.isPublic) {
+            globalThis.dispatchEvent(new CustomEvent('tag-visibility-changed', {
+              detail: { verseKey, tagId, isPublic: false }
+            }));
+          }
+          
+          // Notify TagsList to remove the tag
+          globalThis.dispatchEvent(new CustomEvent('tag-deleted', {
+            detail: { tagId }
+          }));
         }
       }
     });
-  };
-
-  if (!userId) {
+  };  if (!userId) {
     return (
       <div className="mt-4 text-sm" style={{ color: 'var(--text-muted)' }}>
         {t('signInToTag')}
@@ -137,6 +155,7 @@ export default function TagInput({ verseKey, initialTags, userId }: TagInputProp
               {/* Toggle visibility button */}
               <TagToggleButton
                 tagId={tag.id}
+                verseKey={verseKey}
                 isPublic={tag.isPublic}
                 onToggle={(newIsPublic) => {
                   setTags(prev => prev.map(t =>

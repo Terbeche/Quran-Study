@@ -3,7 +3,6 @@ import { getTranslations } from 'next-intl/server';
 import { VerseCard } from '@/components/verse/VerseCard';
 import { getChapters } from '@/lib/api/chapters';
 import { getVerseByKey } from '@/lib/api/verses';
-import { getVerseAudio } from '@/lib/quran-api/client';
 import { auth } from '@/auth';
 import type { Chapter, Verse } from '@/types/verse';
 
@@ -15,23 +14,12 @@ export default async function Home() {
   const session = await auth();
   
   // Fetch featured verse (Ayat al-Kursi)
+  // Audio will be lazy-loaded when user clicks play
   let featuredVerse: Verse | null = null;
-  let featuredVerseAudio: string | undefined;
   
   try {
     const verseData = await getVerseByKey('2:255');
     featuredVerse = verseData;
-    
-    // Try to get audio, but don't fail if it doesn't work
-    try {
-      const audioData = await getVerseAudio(7, '2:255');
-      if (audioData.audio_files?.[0]?.url) {
-        featuredVerseAudio = `https://verses.quran.com/${audioData.audio_files[0].url}`;
-      }
-    } catch (audioError) {
-      console.error('Failed to load featured verse audio:', audioError);
-      // Continue without audio
-    }
   } catch (error) {
     console.error('Failed to load featured verse:', error);
   }
@@ -82,7 +70,7 @@ export default async function Home() {
       {featuredVerse && (
         <div className="max-w-4xl mx-auto mb-8 md:mb-12 animate-fade-in">
           <h2 className="section-title text-xl sm:text-2xl">📖 {t('featuredVerse')}: {t('ayatAlKursi')}</h2>
-          <VerseCard verse={featuredVerse} audioUrl={featuredVerseAudio} />
+          <VerseCard verse={featuredVerse} />
         </div>
       )}
 

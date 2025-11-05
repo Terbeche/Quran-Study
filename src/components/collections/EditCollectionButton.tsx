@@ -110,7 +110,7 @@ export default function EditCollectionButton({
                   disabled={isPending}
                   className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isPending ? t('saving') : t('saveChanges')}
+                  {isPending ? tCommon('saving') : t('submit')}
                 </button>
               </div>
             </form>

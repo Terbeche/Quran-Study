@@ -5,6 +5,7 @@ import { db } from '@/db';
 import { tags } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { normalizeTag } from '@/lib/utils/tag-normalizer';
+import { revalidatePath } from 'next/cache';
 
 export async function createTagAction(verseKey: string, tagText: string, isPublic: boolean = false) {
   const session = await auth();
@@ -50,8 +51,8 @@ export async function createTagAction(verseKey: string, tagText: string, isPubli
   }
 }
 
+// Fast version without revalidation (for verse cards with optimistic updates)
 export async function deleteTagAction(tagId: string) {
-  console.log('Deleting tag with ID:', tagId);
   const session = await auth();
 
   if (!session?.user?.id) {
@@ -68,6 +69,18 @@ export async function deleteTagAction(tagId: string) {
   return { success: true };
 }
 
+// Version with revalidation (for tags page)
+export async function deleteTagWithRevalidationAction(tagId: string) {
+  const result = await deleteTagAction(tagId);
+  
+  if (result.success) {
+    revalidatePath('/[locale]/tags', 'page');
+  }
+  
+  return result;
+}
+
+// Fast version without revalidation (for verse cards with optimistic updates)
 export async function toggleTagVisibilityAction(tagId: string, isPublic: boolean) {
   const session = await auth();
 
@@ -84,6 +97,16 @@ export async function toggleTagVisibilityAction(tagId: string, isPublic: boolean
     ))
     .returning();
 
-
   return { data: tag };
+}
+
+// Version with revalidation (for tags page)
+export async function toggleTagVisibilityWithRevalidationAction(tagId: string, isPublic: boolean) {
+  const result = await toggleTagVisibilityAction(tagId, isPublic);
+  
+  if (result.data) {
+    revalidatePath('/[locale]/tags', 'page');
+  }
+  
+  return result;
 }

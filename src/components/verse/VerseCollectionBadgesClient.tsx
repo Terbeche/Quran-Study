@@ -20,10 +20,16 @@ export function VerseCollectionBadgesClient({ verseKey, initialCollections }: Ve
   const [collections, setCollections] = useState<Collection[]>(initialCollections);
   const [isPending, startTransition] = useTransition();
 
+  // Sync with initialCollections when it changes
+  useEffect(() => {
+    setCollections(initialCollections);
+  }, [initialCollections]);
+
   // Listen for collection additions
   useEffect(() => {
-    const handleCollectionAdded = (event: CustomEvent) => {
-      const { verseKey: eventVerseKey, collectionId, collectionName } = event.detail;
+    const handleCollectionAdded = (event: Event) => {
+      const customEvent = event as CustomEvent<{ verseKey: string; collectionId: string; collectionName: string }>;
+      const { verseKey: eventVerseKey, collectionId, collectionName } = customEvent.detail;
       if (eventVerseKey === verseKey) {
         // Add the new collection to the list if not already present
         setCollections(prev => {
@@ -35,9 +41,9 @@ export function VerseCollectionBadgesClient({ verseKey, initialCollections }: Ve
       }
     };
 
-    globalThis.addEventListener('verse-added-to-collection', handleCollectionAdded as EventListener);
+    globalThis.addEventListener('verse-added-to-collection', handleCollectionAdded);
     return () => {
-      globalThis.removeEventListener('verse-added-to-collection', handleCollectionAdded as EventListener);
+      globalThis.removeEventListener('verse-added-to-collection', handleCollectionAdded);
     };
   }, [verseKey]);
 

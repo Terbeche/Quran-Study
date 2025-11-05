@@ -4,6 +4,7 @@
     "loading": "Loading...",
     "error": "Error",
     "save": "Save",
+    "saving": "Saving...",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
@@ -135,7 +136,8 @@
     "delete": "Delete",
     "addTag": "Add Tag",
     "tagPlaceholder": "Enter tag name",
-    "alreadyExists": "You already have this tag on this verse"
+    "alreadyExists": "You already have this tag on this verse",
+    "searchThisTag": "Search this tag"
   },
   "community": {
     "title": "Community Tags",
@@ -176,7 +178,13 @@
     "pleaseSignIn": "Please sign in to add tags",
     "tagValidation": "Tag must be 2-50 characters",
     "tagAlreadyExists": "You already have this tag on this verse",
-    "signInToTag": "Sign in to add personal tags"
+    "signInToTag": "Sign in to add personal tags",
+    "loading": "Loading...",
+    "loadMore": "Load More Verses",
+    "allVersesLoaded": "All {count} verses loaded",
+    "loadingAudio": "Loading audio...",
+    "audioError": "Audio Error",
+    "audioUnavailable": "Audio unavailable for this verse"
   },
   "search": {
     "title": "Search",

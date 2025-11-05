@@ -4,6 +4,7 @@ import { auth } from '@/auth';
 import { db } from '@/db';
 import { collections, collectionVerses } from '@/db/schema';
 import { eq, and } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 
 export async function createCollectionAction(name: string, description?: string) {
   const session = await auth();
@@ -31,6 +32,10 @@ export async function createCollectionAction(name: string, description?: string)
         description: description?.trim() || null,
       })
       .returning();
+    
+    // Revalidate collections page to show new collection
+    revalidatePath('/[locale]/collections', 'page');
+    
     return { data: collection };
   } catch (error) {
     console.error('Create collection error:', error);
@@ -59,6 +64,9 @@ export async function deleteCollectionAction(collectionId: string) {
         eq(collections.id, collectionId),
         eq(collections.userId, session.user.id)
       ));
+
+    // Revalidate collections page to remove deleted collection
+    revalidatePath('/[locale]/collections', 'page');
 
     return { success: true };
   } catch (error) {
@@ -230,6 +238,11 @@ export async function updateCollectionAction(
     if (!collection) {
       return { error: 'Collection not found' };
     }
+
+    // Revalidate collections page to show updated collection
+    revalidatePath('/[locale]/collections', 'page');
+    // Also revalidate individual collection page
+    revalidatePath(`/[locale]/collections/${collectionId}`, 'page');
 
     return { data: collection };
   } catch (error) {

@@ -6,11 +6,12 @@ import { toggleTagVisibilityAction } from '@/actions/tag-actions';
 
 interface TagToggleButtonProps {
   readonly tagId: string;
+  readonly verseKey?: string;
   readonly isPublic: boolean;
   readonly onToggle?: (newIsPublic: boolean) => void;
 }
 
-export default function TagToggleButton({ tagId, isPublic, onToggle }: TagToggleButtonProps) {
+export default function TagToggleButton({ tagId, verseKey, isPublic, onToggle }: TagToggleButtonProps) {
   const t = useTranslations('tags');
   const [isPending, startTransition] = useTransition();
   const [localIsPublic, setLocalIsPublic] = useState(isPublic);
@@ -30,6 +31,14 @@ export default function TagToggleButton({ tagId, isPublic, onToggle }: TagToggle
         // Rollback on error
         setLocalIsPublic(previousIsPublic);
         onToggle?.(previousIsPublic);
+        return;
+      }
+      
+      // Dispatch event to notify other components (CommunityTagsPreview, TagsList)
+      if (typeof globalThis !== 'undefined') {
+        globalThis.dispatchEvent(new CustomEvent('tag-visibility-changed', {
+          detail: { verseKey, tagId, isPublic: newIsPublic }
+        }));
       }
     });
   };

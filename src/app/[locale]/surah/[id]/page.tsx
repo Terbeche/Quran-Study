@@ -1,15 +1,17 @@
+import { VerseList } from '@/components/verse/VerseList';
 import { VerseCard } from '@/components/verse/VerseCard';
 import { ReciterAudioPlayer } from '@/components/verse/ReciterAudioPlayer';
 import { ScrollToHash } from '@/components/layout/ScrollToHash';
 import { Link } from '@/i18n/routing';
 import { getChapter } from '@/lib/api/chapters';
 import { getVersesByChapter } from '@/lib/api/verses';
-import { getChapterAudio, getVerseAudioFiles } from '@/lib/quran-api/client';
+import { getChapterAudio } from '@/lib/quran-api/client';
 import { auth } from '@/auth';
 import { db } from '@/db';
 import { collections } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { getTranslations } from 'next-intl/server';
+import { VERSES_PER_PAGE, DEFAULT_RECITER_ID } from '@/lib/constants';
 import type { Chapter, Verse } from '@/types/verse';
 import type { Collection } from '@/types/collection';
 import type { Metadata } from 'next';
@@ -67,7 +69,6 @@ export default async function SurahPage({ params }: SurahPageProps) {
   let verses: Verse[] = [];
   let chapterAudioUrl: string | undefined;
   let chapterAudioTimestamps: Array<{ verse_key: string; timestamp_from: number; timestamp_to: number }> = [];
-  let verseAudioFiles: Array<{ url: string; verse_key: string }> = [];
   let error = null;
 
   try {
@@ -75,11 +76,10 @@ export default async function SurahPage({ params }: SurahPageProps) {
     const chapterData = await getChapter(chapterId);
     chapter = chapterData.chapter;
     
-    // Fetch all verses and audio in parallel
-    const [versesData, chapterAudioData, verseAudioData] = await Promise.all([
-      getVersesByChapter(chapterId, 1, chapter.verses_count), // Fetch ALL verses
-      getChapterAudio(7, chapterId, true), // Recitation ID 7 = Alafasy, segments=true for timestamps
-      getVerseAudioFiles(7, chapterId, 1, chapter.verses_count) // Fetch ALL verse audio files
+    // Fetch initial verses and chapter audio
+    const [versesData, chapterAudioData] = await Promise.all([
+      getVersesByChapter(chapterId, 1, VERSES_PER_PAGE),
+      getChapterAudio(DEFAULT_RECITER_ID, chapterId, true), // segments=true for timestamps
     ]);
     
     verses = versesData.verses || [];
@@ -88,12 +88,6 @@ export default async function SurahPage({ params }: SurahPageProps) {
       chapterAudioUrl = chapterAudioData.audio_file.audio_url;
       chapterAudioTimestamps = chapterAudioData.audio_file.timestamps || [];
     }
-    
-    // Convert relative audio URLs to absolute URLs for individual verse playback
-    verseAudioFiles = (verseAudioData.audio_files || []).map((file: { url: string; verse_key: string }) => ({
-      ...file,
-      url: `https://verses.quran.com/${file.url}`
-    }));
   } catch (err) {
     error = err;
   }
@@ -148,23 +142,26 @@ export default async function SurahPage({ params }: SurahPageProps) {
         />
       )}
 
-      {/* Verses */}
-      <div className="space-y-4">
-        {verses.map((verse, index) => (
-          <VerseCard 
-            key={verse.verse_key} 
-            verse={verse}
-            audioUrl={verseAudioFiles[index]?.url}
-            userCollections={userCollections}
-          />
-        ))}
-      </div>
-
-      {verses.length === 0 && (
-        <div className="text-center py-12 card">
-          <p style={{ color: 'var(--text-muted)' }}>{t('noVerses')}</p>
-        </div>
-      )}
+      {/* Verses List with Incremental Loading */}
+      <VerseList 
+        chapterId={chapterId}
+        initialVersesContent={
+          <>
+            {verses.map((verse) => (
+              <VerseCard 
+                key={verse.verse_key} 
+                verse={verse}
+                userCollections={userCollections}
+              />
+            ))}
+          </>
+        }
+        initialVerses={verses}
+        totalVerses={chapter.verses_count}
+        versesPerPage={VERSES_PER_PAGE}
+        userId={userId}
+        userCollections={userCollections}
+      />
     </div>
   );
 }

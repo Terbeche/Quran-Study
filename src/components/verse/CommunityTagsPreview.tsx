@@ -1,23 +1,53 @@
-import { db } from '@/db';
-import { getTranslations } from 'next-intl/server';
-import { tags } from '@/db/schema';
-import { eq, and, desc } from 'drizzle-orm';
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
+
+interface Tag {
+  id: string;
+  tagText: string;
+  votes: number;
+}
 
 interface CommunityTagsPreviewProps {
   readonly verseKey: string;
+  readonly initialTags?: Tag[];
 }
 
-export default async function CommunityTagsPreview({ verseKey }: CommunityTagsPreviewProps) {
-  const t = await getTranslations('verse');
-  const topTags = await db
-    .select()
-    .from(tags)
-    .where(and(
-      eq(tags.verseKey, verseKey),
-      eq(tags.isPublic, true)
-    ))
-    .orderBy(desc(tags.votes))
-    .limit(5);
+export default function CommunityTagsPreview({ verseKey, initialTags = [] }: CommunityTagsPreviewProps) {
+  const t = useTranslations('verse');
+  const [topTags, setTopTags] = useState<Tag[]>(initialTags);
+
+  // Fetch community tags and listen for changes
+  useEffect(() => {
+    const fetchCommunityTags = () => {
+      fetch(`/api/community-tags?verseKey=${verseKey}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.tags) {
+            setTopTags(data.tags);
+          }
+        })
+        .catch(err => console.error('Failed to load community tags:', err));
+    };
+
+    // Initial fetch
+    fetchCommunityTags();
+
+    // Listen for tag visibility changes
+    const handleTagVisibilityChanged = (event: Event) => {
+      const customEvent = event as CustomEvent<{ verseKey: string; tagId: string; isPublic: boolean }>;
+      if (customEvent.detail.verseKey === verseKey) {
+        // Refetch community tags when a tag is made public/private
+        fetchCommunityTags();
+      }
+    };
+
+    globalThis.addEventListener('tag-visibility-changed', handleTagVisibilityChanged);
+    return () => {
+      globalThis.removeEventListener('tag-visibility-changed', handleTagVisibilityChanged);
+    };
+  }, [verseKey]);
 
   if (topTags.length === 0) {
     return null;

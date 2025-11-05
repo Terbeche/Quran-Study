@@ -4,21 +4,20 @@ import type { Collection } from '@/types/collection';
 import { auth } from '@/auth';
 import { db } from '@/db';
 import { tags } from '@/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, desc } from 'drizzle-orm';
 import TagInput from './TagInput';
-import VerseAudioPlayer from './VerseAudioPlayer';
+import { LazyVerseAudioPlayer } from './LazyVerseAudioPlayer';
 import CommunityTagsPreview from './CommunityTagsPreview';
 import AddToCollectionButton from '@/components/collections/AddToCollectionButton';
 import { VerseCollectionBadges } from './VerseCollectionBadges';
 
 interface VerseCardProps {
   readonly verse: Verse;
-  readonly audioUrl?: string;
   readonly showTags?: boolean;
   readonly userCollections?: Collection[];
 }
 
-export async function VerseCard({ verse, audioUrl, showTags = true, userCollections = [] }: VerseCardProps) {
+export async function VerseCard({ verse, showTags = true, userCollections = [] }: VerseCardProps) {
   let userTags: Tag[] = [];
   let userId: string | undefined;
 
@@ -37,6 +36,21 @@ export async function VerseCard({ verse, audioUrl, showTags = true, userCollecti
     }
   }
 
+  // Fetch initial community tags
+  const communityTags = await db
+    .select({
+      id: tags.id,
+      tagText: tags.tagText,
+      votes: tags.votes,
+    })
+    .from(tags)
+    .where(and(
+      eq(tags.verseKey, verse.verse_key),
+      eq(tags.isPublic, true)
+    ))
+    .orderBy(desc(tags.votes))
+    .limit(5);
+
   return (
     <div id={`verse-${verse.verse_number}`} className="card card-hover animate-fade-in scroll-mt-20">
       <div className="flex justify-between items-center mb-2">
@@ -44,8 +58,8 @@ export async function VerseCard({ verse, audioUrl, showTags = true, userCollecti
           {verse.verse_key}
         </div>
         
-        {/* Audio Player */}
-        {audioUrl && <VerseAudioPlayer audioUrl={audioUrl} />}
+        {/* Lazy Audio Player - loads audio only when user clicks play */}
+        <LazyVerseAudioPlayer verseKey={verse.verse_key} />
       </div>
       
       <div className="text-2xl font-arabic text-right mb-4 leading-loose text-accent">
@@ -80,7 +94,7 @@ export async function VerseCard({ verse, audioUrl, showTags = true, userCollecti
       )}
 
       {/* Community tags preview */}
-      <CommunityTagsPreview verseKey={verse.verse_key} />
+      <CommunityTagsPreview verseKey={verse.verse_key} initialTags={communityTags} />
 
       {/* Collection badges */}
       <VerseCollectionBadges verseKey={verse.verse_key} />

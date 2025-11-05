@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
+import { globalAudioManager } from '@/lib/audioManager';
 
 interface ChapterAudioPlayerProps {
   readonly totalVerses: number;
@@ -34,11 +35,34 @@ export function ChapterAudioPlayer({
   const [loopMode, setLoopMode] = useState<'off' | 'verse' | 'chapter'>('off');
   const audioRef = useRef<HTMLAudioElement>(null);
 
+  // Create a stable pause function that the audio manager can call
+  const pauseAudioCallback = useRef(() => {
+    if (audioRef.current && !audioRef.current.paused) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    }
+  });
+
+  // Cleanup on unmount
+  useEffect(() => {
+    const cleanup = () => {
+      globalAudioManager.unregister(pauseAudioCallback.current);
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
+    };
+    
+    return cleanup;
+  }, []);
+
   const handlePlayPause = useCallback(() => {
     if (audioRef.current) {
       if (isPlaying) {
         audioRef.current.pause();
+        setIsPlaying(false);
       } else {
+        // Register with global audio manager to pause any playing verse audio
+        globalAudioManager.register(pauseAudioCallback.current);
         audioRef.current.play().catch((error) => {
           console.error('Failed to play audio:', error);
         });
@@ -214,6 +238,7 @@ export function ChapterAudioPlayer({
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
         setCurrentVerse(1);
+        globalAudioManager.register(pauseAudioCallback.current);
         audioRef.current.play().catch(console.error);
       }
     } else if (loopMode === 'verse' && currentVerse < totalVerses) {
@@ -223,6 +248,7 @@ export function ChapterAudioPlayer({
       // No loop - stop at end
       setIsPlaying(false);
       setCurrentVerse(1);
+      globalAudioManager.unregister(pauseAudioCallback.current);
       if (audioRef.current) {
         audioRef.current.currentTime = 0;
       }

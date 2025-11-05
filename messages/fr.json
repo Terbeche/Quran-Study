@@ -4,6 +4,7 @@
     "loading": "Chargement...",
     "error": "Erreur",
     "save": "Enregistrer",
+    "saving": "Enregistrement...",
     "cancel": "Annuler",
     "delete": "Supprimer",
     "edit": "Modifier",
@@ -135,7 +136,8 @@
     "delete": "Supprimer",
     "addTag": "Ajouter une Étiquette",
     "tagPlaceholder": "Entrez le nom de l'étiquette",
-    "alreadyExists": "Vous avez déjà cette étiquette sur ce verset"
+    "alreadyExists": "Vous avez déjà cette étiquette sur ce verset",
+    "searchThisTag": "Rechercher cette étiquette"
   },
   "community": {
     "title": "Étiquettes communautaires",
@@ -176,7 +178,13 @@
     "pleaseSignIn": "Veuillez vous connecter pour ajouter des étiquettes",
     "tagValidation": "L'étiquette doit contenir 2 à 50 caractères",
     "tagAlreadyExists": "Vous avez déjà cette étiquette sur ce verset",
-    "signInToTag": "Connectez-vous pour ajouter des étiquettes personnelles"
+    "signInToTag": "Connectez-vous pour ajouter des étiquettes personnelles",
+    "loading": "Chargement...",
+    "loadMore": "Charger Plus de Versets",
+    "allVersesLoaded": "Tous les {count} versets chargés",
+    "loadingAudio": "Chargement de l'audio...",
+    "audioError": "Erreur Audio",
+    "audioUnavailable": "Audio indisponible pour ce verset"
   },
   "search": {
     "title": "Recherche",
