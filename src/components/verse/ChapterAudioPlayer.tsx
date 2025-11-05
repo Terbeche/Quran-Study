@@ -18,7 +18,7 @@ interface ChapterAudioPlayerProps {
     style?: string;
   }>;
   readonly currentReciterId?: number;
-  readonly onReciterChange?: (reciterId: number) => void;
+  readonly onReciterChange?: (reciterId: number, currentVerse?: number) => void;
 }
 
 export function ChapterAudioPlayer({ 
@@ -34,6 +34,8 @@ export function ChapterAudioPlayer({
   const [currentVerse, setCurrentVerse] = useState(1);
   const [loopMode, setLoopMode] = useState<'off' | 'verse' | 'chapter'>('off');
   const audioRef = useRef<HTMLAudioElement>(null);
+  const wasPlayingBeforeReciterChange = useRef(false);
+  const previousAudioUrl = useRef(audioUrl);
 
   // Create a stable pause function that the audio manager can call
   const pauseAudioCallback = useRef(() => {
@@ -54,6 +56,41 @@ export function ChapterAudioPlayer({
     
     return cleanup;
   }, []);
+
+  // Handle reciter change (when audioUrl changes)
+  useEffect(() => {
+    if (!audioRef.current) return;
+    
+    // Check if audioUrl actually changed (reciter switch)
+    if (previousAudioUrl.current !== audioUrl) {  
+      // Store playing state
+      wasPlayingBeforeReciterChange.current = isPlaying;
+      
+      // Load new audio
+      audioRef.current.load();
+      
+      // Wait for metadata to be loaded, then seek to current verse
+      const handleMetadataLoaded = () => {
+        if (!audioRef.current || timestamps.length === 0) return;
+        
+        const timestamp = timestamps[currentVerse - 1];
+        if (timestamp) {
+          audioRef.current.currentTime = timestamp.timestamp_from / 1000;
+          
+          // Resume playing if it was playing before
+          if (wasPlayingBeforeReciterChange.current) {
+            globalAudioManager.register(pauseAudioCallback.current);
+            audioRef.current.play().catch(console.error);
+          }
+        }
+      };
+      
+      audioRef.current.addEventListener('loadedmetadata', handleMetadataLoaded, { once: true });
+      
+      // Update ref
+      previousAudioUrl.current = audioUrl;
+    }
+  }, [audioUrl, currentVerse, timestamps, isPlaying]);
 
   const handlePlayPause = useCallback(() => {
     if (audioRef.current) {
@@ -354,7 +391,7 @@ export function ChapterAudioPlayer({
             <select
               id="reciter-select"
               value={currentReciterId || 7}
-              onChange={(e) => onReciterChange(Number(e.target.value))}
+              onChange={(e) => onReciterChange(Number(e.target.value), currentVerse)}
               className="bg-transparent text-sm text-gray-700 font-medium border-none focus:outline-none cursor-pointer focus:ring-2 focus:ring-emerald-300 rounded"
               title={t('selectReciter')}
             >

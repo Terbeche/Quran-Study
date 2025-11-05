@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { validateRequiredParams, validateNumberParams, internalError } from '@/lib/api/helpers';
+import { getVerseAudioFiles } from '@/lib/quran-api/client';
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const chapter = searchParams.get('chapter');
     const verse = searchParams.get('verse');
+    const reciter = searchParams.get('reciter') || '7'; // Default to Alafasy
 
     // Validate required parameters
     const validationError = validateRequiredParams(
@@ -23,20 +25,35 @@ export async function GET(request: NextRequest) {
 
     const chapterId = Number.parseInt(chapter!);
     const verseNumber = Number.parseInt(verse!);
+    const reciterId = Number.parseInt(reciter);
 
-    // Construct the audio URL using the Quran.com verses CDN
-    const chapterPadded = chapterId.toString().padStart(3, '0');
-    const versePadded = verseNumber.toString().padStart(3, '0');
+    // Fetch verse audio from Quran.com API
+    const audioData = await getVerseAudioFiles(reciterId, chapterId, 1, 300);
     
-    // Using recitation ID 7 (Alafasy) format
-    const audioUrl = `https://verses.quran.com/Alafasy/mp3/${chapterPadded}${versePadded}.mp3`;
+    // Find the specific verse in the audio files
+    const verseAudio = audioData.audio_files?.find(
+      (file: { verse_key: string }) => file.verse_key === `${chapterId}:${verseNumber}`
+    );
+
+    if (!verseAudio?.url) {
+      return NextResponse.json(
+        { error: 'Audio not found for this verse' },
+        { status: 404 }
+      );
+    }
+
+    // Convert relative URL to absolute URL if needed
+    let audioUrl = verseAudio.url;
+    if (!audioUrl.startsWith('http')) {
+      audioUrl = `https://verses.quran.com/${audioUrl}`;
+    }
 
     return NextResponse.json({
       audioUrl,
       verseKey: `${chapterId}:${verseNumber}`
     });
   } catch (error) {
-    console.error('Error generating verse audio URL:', error);
-    return internalError('Failed to generate audio URL');
+    console.error('Error fetching verse audio:', error);
+    return internalError('Failed to fetch audio URL');
   }
 }

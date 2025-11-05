@@ -1,6 +1,7 @@
 import { VerseList } from '@/components/verse/VerseList';
 import { VerseCard } from '@/components/verse/VerseCard';
 import { ReciterAudioPlayer } from '@/components/verse/ReciterAudioPlayer';
+import { ReciterProvider } from '@/contexts/ReciterContext';
 import { ScrollToHash } from '@/components/layout/ScrollToHash';
 import { Link } from '@/i18n/routing';
 import { getChapter } from '@/lib/api/chapters';
@@ -103,65 +104,67 @@ export default async function SurahPage({ params }: SurahPageProps) {
   }
 
   return (
-    <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8 animate-fade-in max-w-5xl">
-      {/* Handle scroll to hash for verse navigation */}
-      <ScrollToHash />
-      
-      {/* Chapter Header */}
-      <div className="mb-6 md:mb-8">
-        <Link href="/" className="link mb-3 md:mb-4 inline-block text-sm md:text-base">
-          ← {t('backToHome')}
-        </Link>
+    <ReciterProvider>
+      <div className="container mx-auto px-3 sm:px-4 md:px-6 py-4 md:py-8 animate-fade-in max-w-5xl">
+        {/* Handle scroll to hash for verse navigation */}
+        <ScrollToHash />
         
-        <div className="card">
-          <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
-            <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-accent">
-                {chapter.name_simple}
-              </h1>
-              <p className="text-sm md:text-base" style={{ color: 'var(--foreground)' }}>{chapter.translated_name?.name}</p>
-            </div>
-            <div className="text-3xl sm:text-4xl font-arabic text-accent">{chapter.name_arabic}</div>
-          </div>
+        {/* Chapter Header */}
+        <div className="mb-6 md:mb-8">
+          <Link href="/" className="link mb-3 md:mb-4 inline-block text-sm md:text-base">
+            ← {t('backToHome')}
+          </Link>
           
-          <div className="flex flex-wrap gap-3 sm:gap-6 text-xs sm:text-sm" style={{ color: 'var(--foreground)' }}>
-            <span>📖 {t('verses', { count: chapter.verses_count })}</span>
-            <span className="capitalize">📍 {t('revelationPlace', { place: t(chapter.revelation_place) })}</span>
-            <span>🔢 {t('chapterNumber', { number: chapter.id })}</span>
+          <div className="card">
+            <div className="flex flex-col sm:flex-row justify-between items-start gap-3 mb-4">
+              <div className="flex-1">
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 text-accent">
+                  {chapter.name_simple}
+                </h1>
+                <p className="text-sm md:text-base" style={{ color: 'var(--foreground)' }}>{chapter.translated_name?.name}</p>
+              </div>
+              <div className="text-3xl sm:text-4xl font-arabic text-accent">{chapter.name_arabic}</div>
+            </div>
+            
+            <div className="flex flex-wrap gap-3 sm:gap-6 text-xs sm:text-sm" style={{ color: 'var(--foreground)' }}>
+              <span>📖 {t('verses', { count: chapter.verses_count })}</span>
+              <span className="capitalize">📍 {t('revelationPlace', { place: t(chapter.revelation_place) })}</span>
+              <span>🔢 {t('chapterNumber', { number: chapter.id })}</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Chapter Audio Player */}
-      {chapterAudioUrl && (
-        <ReciterAudioPlayer 
+        {/* Chapter Audio Player */}
+        {chapterAudioUrl && (
+          <ReciterAudioPlayer 
+            chapterId={chapterId}
+            totalVerses={chapter.verses_count}
+            initialAudioUrl={chapterAudioUrl}
+            initialTimestamps={chapterAudioTimestamps}
+          />
+        )}
+
+        {/* Verses List with Incremental Loading */}
+        <VerseList 
           chapterId={chapterId}
+          initialVersesContent={
+            <>
+              {verses.map((verse) => (
+                <VerseCard 
+                  key={verse.verse_key} 
+                  verse={verse}
+                  userCollections={userCollections}
+                />
+              ))}
+            </>
+          }
+          initialVerses={verses}
           totalVerses={chapter.verses_count}
-          initialAudioUrl={chapterAudioUrl}
-          initialTimestamps={chapterAudioTimestamps}
+          versesPerPage={VERSES_PER_PAGE}
+          userId={userId}
+          userCollections={userCollections}
         />
-      )}
-
-      {/* Verses List with Incremental Loading */}
-      <VerseList 
-        chapterId={chapterId}
-        initialVersesContent={
-          <>
-            {verses.map((verse) => (
-              <VerseCard 
-                key={verse.verse_key} 
-                verse={verse}
-                userCollections={userCollections}
-              />
-            ))}
-          </>
-        }
-        initialVerses={verses}
-        totalVerses={chapter.verses_count}
-        versesPerPage={VERSES_PER_PAGE}
-        userId={userId}
-        userCollections={userCollections}
-      />
-    </div>
+      </div>
+    </ReciterProvider>
   );
 }

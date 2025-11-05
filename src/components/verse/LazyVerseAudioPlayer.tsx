@@ -1,14 +1,16 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { globalAudioManager } from '@/lib/audioManager';
+import { useReciter } from '@/contexts/ReciterContext';
 
 interface LazyVerseAudioPlayerProps {
   readonly verseKey: string;
 }
 
 export function LazyVerseAudioPlayer({ verseKey }: LazyVerseAudioPlayerProps) {
+  const { currentReciterId } = useReciter();
   const t = useTranslations('verse');
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
@@ -18,9 +20,7 @@ export function LazyVerseAudioPlayer({ verseKey }: LazyVerseAudioPlayerProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
 
   // Fetch audio URL only when user wants to play
-  const fetchAudioUrl = async () => {
-    if (audioUrl || isLoading) return; // Already loaded or loading
-
+  const fetchAudioUrl = useCallback(async () => {
     setIsLoading(true);
     setError(false);
 
@@ -28,8 +28,8 @@ export function LazyVerseAudioPlayer({ verseKey }: LazyVerseAudioPlayerProps) {
       // Extract chapter and verse from verse_key (e.g., "2:255" -> chapter=2, verse=255)
       const [chapterId, verseNumber] = verseKey.split(':').map(Number);
       
-      // Fetch just this single verse's audio
-      const response = await fetch(`/api/verse-audio?chapter=${chapterId}&verse=${verseNumber}`);
+      // Fetch just this single verse's audio with current reciter
+      const response = await fetch(`/api/verse-audio?chapter=${chapterId}&verse=${verseNumber}&reciter=${currentReciterId}`);
       
       if (!response.ok) {
         throw new Error('Failed to fetch audio');
@@ -47,7 +47,7 @@ export function LazyVerseAudioPlayer({ verseKey }: LazyVerseAudioPlayerProps) {
       setError(true);
       setIsLoading(false);
     }
-  };
+  }, [verseKey, currentReciterId]);
 
   // Stable pause function that the audio manager can call
   const pauseAudioCallback = useRef(() => {
@@ -69,6 +69,20 @@ export function LazyVerseAudioPlayer({ verseKey }: LazyVerseAudioPlayerProps) {
     return cleanup;
   }, []);
 
+  // Reload audio when reciter changes
+  useEffect(() => {
+    // If audio was loaded and reciter changed, reload it
+    if (audioUrl) {
+      setAudioUrl(null); // Reset URL to force reload
+      if (isPlaying) {
+        // If was playing, reload and auto-play
+        setShouldAutoPlay(true);
+        fetchAudioUrl();
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentReciterId]);
+
   // Auto-play after audio URL is loaded (only if user clicked play)
   useEffect(() => {
     if (audioUrl && audioRef.current && shouldAutoPlay) {
@@ -89,8 +103,8 @@ export function LazyVerseAudioPlayer({ verseKey }: LazyVerseAudioPlayerProps) {
   }, [audioUrl, shouldAutoPlay]);
 
   const handlePlayPause = async () => {
-    // If no audio URL yet, fetch it first
-    if (!audioUrl && !error) {
+    // If no audio URL yet or loading, fetch it first
+    if ((!audioUrl || isLoading) && !error) {
       setShouldAutoPlay(true);
       await fetchAudioUrl();
       return;

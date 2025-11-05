@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { ChapterAudioPlayer } from './ChapterAudioPlayer';
 import { getRecitationsAction, getChapterAudioAction } from '@/lib/actions/audio-actions';
+import { useReciter } from '@/contexts/ReciterContext';
 
 interface ReciterAudioPlayerProps {
   readonly chapterId: number;
@@ -29,8 +30,8 @@ export function ReciterAudioPlayer({
   initialTimestamps 
 }: ReciterAudioPlayerProps) {
   const t = useTranslations('chapter.audioPlayer');
+  const { currentReciterId, setCurrentReciterId } = useReciter();
   const [reciters, setReciters] = useState<Recitation[]>([]);
-  const [currentReciterId, setCurrentReciterId] = useState(7); // Default: Alafasy
   const [audioUrl, setAudioUrl] = useState(initialAudioUrl);
   const [timestamps, setTimestamps] = useState(initialTimestamps);
   const [isLoading, setIsLoading] = useState(false);
