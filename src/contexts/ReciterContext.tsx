@@ -23,8 +23,13 @@ export function ReciterProvider({ children }: Readonly<{ children: ReactNode }>)
 
 export function useReciter() {
   const context = useContext(ReciterContext);
+  
+  // If not within a provider, return default values
   if (context === undefined) {
-    throw new Error('useReciter must be used within a ReciterProvider');
+    return {
+      currentReciterId: 7, // Default: Alafasy
+      setCurrentReciterId: () => {}, // No-op function
+    };
   }
   return context;
 }
