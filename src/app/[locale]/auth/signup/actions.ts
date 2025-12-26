@@ -32,7 +32,7 @@ export async function signUpAction(formData: FormData) {
   } catch (error) {
     console.error('Signup error:', error);
     
-    if (error && typeof error === 'object' && 'code' in error && error.code === '23505') {
+    if (error && typeof error === 'object' && 'code' in error && error.code === 'ER_DUP_ENTRY') {
       return { error: 'Email already exists' };
     }
     

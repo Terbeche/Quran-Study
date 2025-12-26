@@ -3,7 +3,7 @@
 import { auth } from '@/auth';
 import { db } from '@/db';
 import { collections, collectionVerses } from '@/db/schema';
-import { eq, and } from 'drizzle-orm';
+import { eq, and, desc } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
 export async function createCollectionAction(name: string, description?: string) {
@@ -24,14 +24,21 @@ export async function createCollectionAction(name: string, description?: string)
   }
 
   try {
-    const [collection] = await db
+    await db
       .insert(collections)
       .values({
         userId: session.user.id,
         name: trimmedName,
         description: description?.trim() || null,
-      })
-      .returning();
+      });
+    
+    // Get the created collection
+    const [collection] = await db
+      .select()
+      .from(collections)
+      .where(eq(collections.userId, session.user.id))
+      .orderBy(desc(collections.createdAt))
+      .limit(1);
     
     // Revalidate collections page to show new collection
     revalidatePath('/[locale]/collections', 'page');
@@ -42,7 +49,7 @@ export async function createCollectionAction(name: string, description?: string)
     // Check for unique constraint violation in the cause property
     if (error && typeof error === 'object' && 'cause' in error) {
       const cause = error.cause;
-      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === '23505') {
+      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === 'ER_DUP_ENTRY') {
         return { error: 'You already have a collection with this name' };
       }
     }
@@ -109,15 +116,24 @@ export async function addVerseToCollectionAction(
 
     const maxPosition = verses.reduce((max, v) => Math.max(max, v.position), 0);
 
-    const [verse] = await db
+    await db
       .insert(collectionVerses)
       .values({
         collectionId,
         verseKey,
         position: maxPosition + 1,
         notes: notes || null,
-      })
-      .returning();
+      });
+    
+    // Get the created verse
+    const [verse] = await db
+      .select()
+      .from(collectionVerses)
+      .where(and(
+        eq(collectionVerses.collectionId, collectionId),
+        eq(collectionVerses.verseKey, verseKey)
+      ))
+      .limit(1);
 
     return { data: verse };
   } catch (error) {
@@ -125,7 +141,7 @@ export async function addVerseToCollectionAction(
     // Check for unique constraint violation in the cause property
     if (error && typeof error === 'object' && 'cause' in error) {
       const cause = error.cause;
-      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === '23505') {
+      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === 'ER_DUP_ENTRY') {
         return { error: 'Verse already in collection' };
       }
     }
@@ -222,7 +238,7 @@ export async function updateCollectionAction(
   }
 
   try {
-    const [collection] = await db
+    await db
       .update(collections)
       .set({
         name: trimmedName,
@@ -232,8 +248,17 @@ export async function updateCollectionAction(
       .where(and(
         eq(collections.id, collectionId),
         eq(collections.userId, session.user.id)
+      ));
+    
+    // Get the updated collection
+    const [collection] = await db
+      .select()
+      .from(collections)
+      .where(and(
+        eq(collections.id, collectionId),
+        eq(collections.userId, session.user.id)
       ))
-      .returning();
+      .limit(1);
 
     if (!collection) {
       return { error: 'Collection not found' };
@@ -250,7 +275,7 @@ export async function updateCollectionAction(
     // Check for unique constraint violation in the cause property
     if (error && typeof error === 'object' && 'cause' in error) {
       const cause = error.cause;
-      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === '23505') {
+      if (cause && typeof cause === 'object' && 'code' in cause && cause.code === 'ER_DUP_ENTRY') {
         return { error: 'You already have a collection with this name' };
       }
     }

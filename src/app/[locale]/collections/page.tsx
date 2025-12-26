@@ -24,7 +24,7 @@ export default async function CollectionsPage() {
       name: collections.name,
       description: collections.description,
       isPublic: collections.isPublic,
-      verseCount: sql<number>`cast(count(${collectionVerses.id}) as integer)`,
+      verseCount: sql<number>`cast(count(${collectionVerses.id}) as signed)`,
     })
     .from(collections)
     .leftJoin(collectionVerses, eq(collections.id, collectionVerses.collectionId))

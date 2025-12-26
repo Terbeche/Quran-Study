@@ -83,7 +83,7 @@ Available in multiple languages:
 Before you begin, ensure you have the following installed:
 - **Node.js 18+** - [Download](https://nodejs.org/)
 - **npm** or **yarn** - Package manager
-- **PostgreSQL** - Database (local or cloud)
+- **MySQL 8.0+** - Database (local or cloud)
 - **Git** - Version control
 
 ## 🔧 Installation
@@ -107,7 +107,7 @@ Create a `.env.local` file in the root directory:
 
 ```env
 # Database
-DATABASE_URL="postgresql://user:password@localhost:5432/quran_study"
+DATABASE_URL="mysql://user:password@localhost:3306/quran_study"
 
 # NextAuth
 AUTH_SECRET="your-random-secret-key"
@@ -171,7 +171,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## 🗄️ Database Schema
 
-The application uses PostgreSQL with the following main tables:
+The application uses MySQL with the following main tables:
 
 - **users** - User accounts and profiles
 - **accounts** - NextAuth account linking

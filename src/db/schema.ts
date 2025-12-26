@@ -1,58 +1,58 @@
-import { pgTable, text, timestamp, integer, boolean, uuid, primaryKey, unique, varchar } from 'drizzle-orm/pg-core';
+import { mysqlTable, varchar, timestamp, int, boolean, primaryKey, unique } from 'drizzle-orm/mysql-core';
 import { relations } from 'drizzle-orm';
 
 // Users table
-export const users = pgTable('users', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  name: text('name'),
-  email: text('email').notNull().unique(),
+export const users = mysqlTable('users', {
+  id: varchar('id', { length: 36 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+  name: varchar('name', { length: 255 }),
+  email: varchar('email', { length: 255 }).notNull().unique(),
   emailVerified: timestamp('email_verified'),
-  image: text('image'),
-  password: text('password'),
+  image: varchar('image', { length: 500 }),
+  password: varchar('password', { length: 255 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
 // Sessions table (for NextAuth)
-export const sessions = pgTable('sessions', {
-  sessionToken: text('session_token').primaryKey(),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+export const sessions = mysqlTable('sessions', {
+  sessionToken: varchar('session_token', { length: 255 }).primaryKey(),
+  userId: varchar('user_id', { length: 36 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
   expires: timestamp('expires').notNull(),
 });
 
 // Verification tokens (for NextAuth)
-export const verificationTokens = pgTable('verification_tokens', {
-  identifier: text('identifier').notNull(),
-  token: text('token').notNull(),
+export const verificationTokens = mysqlTable('verification_tokens', {
+  identifier: varchar('identifier', { length: 255 }).notNull(),
+  token: varchar('token', { length: 255 }).notNull(),
   expires: timestamp('expires').notNull(),
 }, (vt) => ({
   compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
 }));
 
 // Accounts table (for NextAuth OAuth providers)
-export const accounts = pgTable('accounts', {
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  type: text('type').notNull(),
-  provider: text('provider').notNull(),
-  providerAccountId: text('provider_account_id').notNull(),
-  refresh_token: text('refresh_token'),
-  access_token: text('access_token'),
-  expires_at: integer('expires_at'),
-  token_type: text('token_type'),
-  scope: text('scope'),
-  id_token: text('id_token'),
-  session_state: text('session_state'),
+export const accounts = mysqlTable('accounts', {
+  userId: varchar('user_id', { length: 36 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+  type: varchar('type', { length: 50 }).notNull(),
+  provider: varchar('provider', { length: 50 }).notNull(),
+  providerAccountId: varchar('provider_account_id', { length: 255 }).notNull(),
+  refresh_token: varchar('refresh_token', { length: 500 }),
+  access_token: varchar('access_token', { length: 500 }),
+  expires_at: int('expires_at'),
+  token_type: varchar('token_type', { length: 50 }),
+  scope: varchar('scope', { length: 255 }),
+  id_token: varchar('id_token', { length: 2000 }),
+  session_state: varchar('session_state', { length: 255 }),
 }, (account) => ({
   compoundKey: primaryKey({ columns: [account.provider, account.providerAccountId] }),
 }));
 
 // Tags table
-export const tags = pgTable('tags', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+export const tags = mysqlTable('tags', {
+  id: varchar('id', { length: 36 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: varchar('user_id', { length: 36 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
   verseKey: varchar('verse_key', { length: 10 }).notNull(),
   tagText: varchar('tag_text', { length: 50 }).notNull(),
   isPublic: boolean('is_public').default(false).notNull(),
-  votes: integer('votes').default(0).notNull(),
+  votes: int('votes').default(0).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 }, (table) => ({
@@ -61,11 +61,11 @@ export const tags = pgTable('tags', {
 }));
 
 // Tag votes table
-export const tagVotes = pgTable('tag_votes', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  tagId: uuid('tag_id').notNull().references(() => tags.id, { onDelete: 'cascade' }),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  voteType: integer('vote_type').notNull(), // 1 for upvote, -1 for downvote
+export const tagVotes = mysqlTable('tag_votes', {
+  id: varchar('id', { length: 36 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+  tagId: varchar('tag_id', { length: 36 }).notNull().references(() => tags.id, { onDelete: 'cascade' }),
+  userId: varchar('user_id', { length: 36 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+  voteType: int('vote_type').notNull(), // 1 for upvote, -1 for downvote
   createdAt: timestamp('created_at').defaultNow().notNull(),
 }, (table) => ({
   // One vote per user per tag
@@ -73,11 +73,11 @@ export const tagVotes = pgTable('tag_votes', {
 }));
 
 // Collections table
-export const collections = pgTable('collections', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
-  name: text('name').notNull(),
-  description: text('description'),
+export const collections = mysqlTable('collections', {
+  id: varchar('id', { length: 36 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+  userId: varchar('user_id', { length: 36 }).notNull().references(() => users.id, { onDelete: 'cascade' }),
+  name: varchar('name', { length: 255 }).notNull(),
+  description: varchar('description', { length: 1000 }),
   isPublic: boolean('is_public').default(false).notNull(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
@@ -87,11 +87,11 @@ export const collections = pgTable('collections', {
 }));
 
 // Collection verses junction table
-export const collectionVerses = pgTable('collection_verses', {
-  id: uuid('id').defaultRandom().primaryKey(),
-  collectionId: uuid('collection_id').notNull().references(() => collections.id, { onDelete: 'cascade' }),
+export const collectionVerses = mysqlTable('collection_verses', {
+  id: varchar('id', { length: 36 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+  collectionId: varchar('collection_id', { length: 36 }).notNull().references(() => collections.id, { onDelete: 'cascade' }),
   verseKey: varchar('verse_key', { length: 10 }).notNull(),
-  position: integer('position').notNull().default(0),
+  position: int('position').notNull().default(0),
   notes: varchar('notes', { length: 500 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 }, (table) => ({

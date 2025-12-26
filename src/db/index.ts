@@ -1,13 +1,16 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
-import postgres from 'postgres';
+import { drizzle } from 'drizzle-orm/mysql2';
+import mysql from 'mysql2/promise';
 import * as schema from './schema';
 
 const connectionString = process.env.DATABASE_URL!;
 
-// Create postgres client for queries with SSL for production (Heroku)
-const client = postgres(connectionString, {
-  ssl: process.env.NODE_ENV === 'production' ? 'require' : undefined,
+// Create MySQL connection pool
+const poolConnection = mysql.createPool({
+  uri: connectionString,
+  waitForConnections: true,
+  connectionLimit: 10,
+  queueLimit: 0,
 });
 
 // Create drizzle instance
-export const db = drizzle(client, { schema });
+export const db = drizzle(poolConnection, { schema, mode: 'default' });
